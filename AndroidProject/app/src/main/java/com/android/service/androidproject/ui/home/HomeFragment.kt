@@ -1,6 +1,7 @@
 package com.android.service.androidproject.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,15 +34,15 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
-        herokuAPI.endpoints.getRestaurants(2).enqueue(object : Callback<JSONArray> {
-            override fun onResponse(call: Call<JSONArray>, response: Response<JSONArray>) {
+        herokuAPI.endpoints.getRestaurants(2).enqueue(object : Callback<JSONObject> {
+            override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
                 if (response.isSuccessful) {
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
                 }
             }
-            override fun onFailure(call: Call<JSONArray>, t: Throwable) {
+            override fun onFailure(call: Call<JSONObject>, t: Throwable) {
                 Toast.makeText(context, "Failed-onFailure", Toast.LENGTH_SHORT).show()
             }
         })

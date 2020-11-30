@@ -3,6 +3,7 @@ package com.android.service.androidproject.API
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -19,7 +20,7 @@ interface herokuAPI {
     @GET("cities")
     fun getCities(): Call<JSONArray>
     @GET("restaurants/{page}")
-    fun getRestaurants(@Path("page")page:Int): Call<JSONArray>
+    fun getRestaurants(@Path("page")page:Int): Call<JSONObject>
     companion object {
         private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         private val okHttp = OkHttpClient.Builder().addInterceptor(logger)
