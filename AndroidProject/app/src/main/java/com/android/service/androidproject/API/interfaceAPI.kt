@@ -8,11 +8,18 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 val BASE_URL_API = "http://opentable.herokuapp.com/api/"
 interface herokuAPI {
     @GET("stats")
+    fun getStats(): Call<JSONArray>
+    @GET("countries")
     fun getCountries(): Call<JSONArray>
+    @GET("cities")
+    fun getCities(): Call<JSONArray>
+    @GET("restaurants/{page}")
+    fun getRestaurants(@Path("page")page:Int): Call<JSONArray>
     companion object {
         private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         private val okHttp = OkHttpClient.Builder().addInterceptor(logger)

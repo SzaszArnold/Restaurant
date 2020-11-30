@@ -33,10 +33,9 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
-        herokuAPI.endpoints.getCountries().enqueue(object : Callback<JSONArray> {
+        herokuAPI.endpoints.getRestaurants(2).enqueue(object : Callback<JSONArray> {
             override fun onResponse(call: Call<JSONArray>, response: Response<JSONArray>) {
                 if (response.isSuccessful) {
-
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
