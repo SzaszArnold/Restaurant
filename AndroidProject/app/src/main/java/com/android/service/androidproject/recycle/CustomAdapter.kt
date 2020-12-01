@@ -36,6 +36,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         holder.foodName.text = "Name: " + data[position].name
         holder.id.text = "City: " + data[position].city
         holder.id.hint = "geo:${data[position].lat},${data[position].lng}"
+        holder.phone.text=data[position].phone
         Glide.with(holder.itemView)
             .load(data[position].url)
             .centerCrop()
@@ -52,6 +53,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         val id: TextView
         val img: ImageView
         val btn: Button
+        val phone: TextView
         override fun onClick(view: View) {
         }
 
@@ -61,6 +63,12 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
             id = view.findViewById(R.id.id)
             img = view.findViewById(R.id.image_view)
             btn = view.findViewById(R.id.btnMap)
+            phone = view.findViewById(R.id.phone)
+            phone.setOnClickListener {
+                val intent =
+                    Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "${phone.text}"))
+                view.context.startActivity(intent)
+            }
             btn.setOnClickListener {
                 val gmmIntentUri = Uri.parse(id.hint.toString())
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
