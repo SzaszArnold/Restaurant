@@ -11,4 +11,6 @@ class RestaurantsDataClass {
     lateinit var lat: String
     @SerializedName("lng")
     lateinit var lng: String
+    @SerializedName("city")
+    lateinit var city: String
 }

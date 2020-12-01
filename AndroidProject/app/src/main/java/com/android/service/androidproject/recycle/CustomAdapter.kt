@@ -6,9 +6,9 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.R
@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide
 
 class CustomAdapter(private val data: List<RestaurantsDataClass>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+    var lat: String = ""
+    var ltg: String = ""
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,16 +33,14 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         holder: ViewHolder,
         position: Int
     ) {
-
-        holder.foodName.text = "Name: "+data[position].name
+        holder.foodName.text = "Name: " + data[position].name
+        holder.id.text = "City: " + data[position].city
+        holder.id.hint = "geo:${data[position].lat},${data[position].lng}"
         Glide.with(holder.itemView)
             .load(data[position].url)
             .centerCrop()
             .placeholder(R.drawable.ic_home_black_24dp)
-            .into(holder.img);
-     //   holder.img.setImageBitmap(stringToBitMap(data[position].img))
-
-
+            .into(holder.img)
     }
 
     override fun getItemCount(): Int {
@@ -51,19 +51,22 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         val foodName: TextView
         val id: TextView
         val img: ImageView
+        val btn: Button
         override fun onClick(view: View) {
-            val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
-            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-            mapIntent.setPackage("com.google.android.apps.maps")
-            view.context.startActivity(mapIntent)
         }
 
         init {
             view.setOnClickListener(this)
             foodName = view.findViewById(R.id.fName)
-            id=view.findViewById(R.id.id)
+            id = view.findViewById(R.id.id)
             img = view.findViewById(R.id.image_view)
-
+            btn = view.findViewById(R.id.btnMap)
+            btn.setOnClickListener {
+                val gmmIntentUri = Uri.parse(id.hint.toString())
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                view.context.startActivity(mapIntent)
+            }
         }
     }
 }
