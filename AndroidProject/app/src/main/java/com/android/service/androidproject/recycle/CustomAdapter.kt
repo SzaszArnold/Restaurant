@@ -35,7 +35,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
     ) {
         holder.foodName.text = "Name: " + data[position].name
         holder.id.text = "City: " + data[position].city
-        holder.id.hint = "geo:${data[position].lat},${data[position].lng}"
+        holder.btn.hint = "geo:${data[position].lat},${data[position].lng}"
         holder.phone.text=data[position].phone
         Glide.with(holder.itemView)
             .load(data[position].url)
@@ -70,7 +70,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
                 view.context.startActivity(intent)
             }
             btn.setOnClickListener {
-                val gmmIntentUri = Uri.parse(id.hint.toString())
+                val gmmIntentUri = Uri.parse(btn.hint.toString())
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 mapIntent.setPackage("com.google.android.apps.maps")
                 view.context.startActivity(mapIntent)
