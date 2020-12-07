@@ -8,8 +8,9 @@ interface ProfileDAO {
 
     @Query("SELECT * FROM profile")
     fun getAll(): LiveData<List<Profile>>
-@Update
-suspend fun update(profile: Profile)
+
+    @Update
+    suspend fun update(profile: Profile)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(profile: Profile)

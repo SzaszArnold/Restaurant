@@ -17,8 +17,6 @@ import com.bumptech.glide.Glide
 
 class CustomAdapter(private val data: List<RestaurantsDataClass>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-    var lat: String = ""
-    var ltg: String = ""
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -77,4 +75,5 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
             }
         }
     }
+
 }
