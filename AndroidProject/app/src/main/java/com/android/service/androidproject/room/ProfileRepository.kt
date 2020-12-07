@@ -2,7 +2,6 @@ package com.android.service.androidproject.room
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.flow.Flow
 
 
 class ProfileRepository(private val profileDAO: ProfileDAO) {
@@ -19,4 +18,10 @@ class ProfileRepository(private val profileDAO: ProfileDAO) {
     suspend fun insert(profile: Profile) {
         profileDAO.insert(profile)
     }
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun update(profile: Profile) {
+        profileDAO.insert(profile)
+    }
+
 }

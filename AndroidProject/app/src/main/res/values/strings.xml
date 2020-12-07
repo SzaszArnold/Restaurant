@@ -4,4 +4,10 @@
     <string name="title_home">Home</string>
     <string name="profile">Profile</string>
     <string name="modify">Modify</string>
+    <string name="pick_image">Pick image</string>
+    <string name="save">Save</string>
+    <string name="name">Name</string>
+    <string name="address">Address</string>
+    <string name="phone_number">Phone number</string>
+    <string name="e_mail">E-mail</string>
 </resources>

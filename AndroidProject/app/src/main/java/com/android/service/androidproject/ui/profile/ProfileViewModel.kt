@@ -25,5 +25,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun insert(profile: Profile) = viewModelScope.launch {
         repository.insert(profile)
     }
+    fun update(profile: Profile) = viewModelScope.launch {
+        repository.update(profile)
+    }
 }
 
