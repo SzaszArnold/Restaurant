@@ -3,4 +3,5 @@
     <string name="title_activity_main">Where to eat?</string>
     <string name="title_home">Home</string>
     <string name="profile">Profile</string>
+    <string name="modify">Modify</string>
 </resources>

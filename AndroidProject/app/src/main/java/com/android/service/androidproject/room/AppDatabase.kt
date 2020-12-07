@@ -19,13 +19,8 @@ abstract class AppDatabase : RoomDatabase() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            INSTANCE?.let { database ->
+            INSTANCE?.let {
                 scope.launch {
-                    var wordDao = database.profileDAO()
-                    wordDao.deleteAll()
-                    var word = Profile("Egy")
-                    wordDao.insert(word)
-
                 }
             }
         }

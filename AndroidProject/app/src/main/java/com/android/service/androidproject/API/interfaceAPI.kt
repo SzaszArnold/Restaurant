@@ -21,7 +21,7 @@ interface herokuAPI {
     @GET("cities")
     fun getCities(): Call<JSONArray>
     @GET("restaurants")
-    fun getRestaurants(@Query("state")state: String): Call<ResponseDataClass>
+    fun getRestaurants(@Query("state")state: String, @Query("per_page")per_page: Int): Call<ResponseDataClass>
     companion object {
         private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         private val okHttp = OkHttpClient.Builder().addInterceptor(logger)
