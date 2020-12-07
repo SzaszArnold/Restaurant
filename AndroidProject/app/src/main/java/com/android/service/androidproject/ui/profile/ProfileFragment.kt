@@ -72,7 +72,6 @@ class ProfileFragment : Fragment() {
             profFavorites.text = "Fav: " + profile[index].favorites
             Glide.with(profImg)
                 .load(profile[index].img)
-                .centerCrop()
                 .override(500, 500)
                 .placeholder(R.drawable.ic_home_black_24dp)
                 .into(profImg)

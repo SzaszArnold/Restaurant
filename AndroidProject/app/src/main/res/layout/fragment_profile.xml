@@ -38,6 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+
                 android:textAlignment="center"
                 />
             <TextView
@@ -51,10 +52,11 @@
 
             <ImageView
                 android:id="@+id/profImg"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:contentDescription="TODO" />
+                android:layout_gravity="center"
+                android:contentDescription="TODO"
+                android:textAlignment="center" />
 
             <Button
                 android:id="@+id/btnModify"
