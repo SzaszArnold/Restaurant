@@ -1,6 +1,5 @@
 package com.android.service.androidproject.API
 
-import androidx.lifecycle.LiveData
 import com.google.gson.annotations.SerializedName
 
 class ResponseDataClass {

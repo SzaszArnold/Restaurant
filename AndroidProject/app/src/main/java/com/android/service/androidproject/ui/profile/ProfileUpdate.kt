@@ -3,11 +3,8 @@ package com.android.service.androidproject.ui.profile
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,9 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.android.service.androidproject.R
-import com.android.service.androidproject.bitMapToString
 import com.android.service.androidproject.room.Profile
-import com.android.service.androidproject.stringToBitMap
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -53,6 +48,7 @@ class ProfileUpdate : Fragment() {
         profImg = root.findViewById(R.id.profImg)
         btnSave = root.findViewById(R.id.btnModify)
         btnPick = root.findViewById(R.id.btnPick)
+        var resList = ""
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
             val index = profile.lastIndex
@@ -61,6 +57,7 @@ class ProfileUpdate : Fragment() {
             profEmail.setText(profile[index].email)
             profPhone.setText(profile[index].phoneNr)
             profFavorites.setText(profile[index].favorites)
+            resList = profile[index].favRes
             Glide.with(profImg)
                 .load(profile[index].img)
                 .centerCrop()
@@ -69,6 +66,7 @@ class ProfileUpdate : Fragment() {
                 .into(profImg)
         })
         btnSave.setOnClickListener { view: View ->
+
             profileViewModel.update(
                 Profile(
                     profName.text.toString(),
@@ -76,7 +74,9 @@ class ProfileUpdate : Fragment() {
                     profPhone.text.toString(),
                     profEmail.text.toString(),
                     profFavorites.text.toString(),
-                    imageUri.toString()
+                    imageUri.toString(),
+                    resList
+
                 )
             )
             view.findNavController().navigate(R.id.action_profileUpdate_to_navigation_profile)

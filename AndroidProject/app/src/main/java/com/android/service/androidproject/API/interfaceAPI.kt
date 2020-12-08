@@ -23,6 +23,10 @@ interface herokuAPI {
     @GET("restaurants/{id}")
     fun getRestaurantsByID(@Path("id")id: Int): Call<RestaurantsDataClass>
     @GET("restaurants")
+    fun getRestaurantsByName(@Query("name")name: String): Call<ResponseDataClass>
+    @GET("restaurants")
+    fun getRestaurantsByCity(@Query("city")city: String): Call<ResponseDataClass>
+    @GET("restaurants")
     fun getRestaurantsByPrice(@Query("state")state: String, @Query("per_page")per_page: Int, @Query("price")current_page: Int): Call<ResponseDataClass>
     @GET("restaurants")
     fun getRestaurants(@Query("state")state: String, @Query("per_page")per_page: Int, @Query("page")current_page: Int): Call<ResponseDataClass>

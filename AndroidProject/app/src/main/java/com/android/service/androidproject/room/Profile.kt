@@ -11,7 +11,8 @@ data class Profile(
     @ColumnInfo(name = "phoneNr") val phoneNr: String,
     @ColumnInfo(name = "email") val email: String,
     @ColumnInfo(name = "favorite") val favorites: String,
-    @ColumnInfo(name = "img") val img: String
+    @ColumnInfo(name = "img") val img: String,
+    @ColumnInfo(name = "favRes") val favRes: String
 
 
 ) {

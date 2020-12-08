@@ -79,14 +79,14 @@ class DetailFragment : Fragment() {
                                     AsyncTask.execute {
 
                                         val favorites = AppDatabase.getDatabase(context!!)
-                                            .profileDAO().getFavorites(18)
+                                            .profileDAO().getFavorites(16)
                                         val favList=getList(favorites)
                                         favList.add(response.body()!!.id)
                                         val gson = Gson()
                                         val json = gson.toJson(favList)
-                                        context?.let { AppDatabase.getDatabase(it) }!!.profileDAO()!!.updateFavorites(18,json)
+                                        context?.let { AppDatabase.getDatabase(it) }!!.profileDAO()!!.updateFavorites(16,json)
                                         val favorit = AppDatabase.getDatabase(context!!)
-                                            .profileDAO().getFavorites(18)
+                                            .profileDAO().getFavorites(16)
                                         Log.d("lassuk","$favorit")
                                     }
 

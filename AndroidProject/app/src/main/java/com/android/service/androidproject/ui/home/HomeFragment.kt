@@ -1,8 +1,8 @@
 package com.android.service.androidproject.ui.home
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,13 +14,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.service.androidproject.API.CityDataClass
 import com.android.service.androidproject.API.ResponseDataClass
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.API.herokuAPI
-import com.android.service.androidproject.MainActivity
 import com.android.service.androidproject.R
 import com.android.service.androidproject.recycle.CustomAdapter
 import com.android.service.androidproject.recycle.PaginationScrollListener
+import com.android.service.androidproject.room.AppDatabase
 import com.android.service.androidproject.ui.profile.ProfileViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -30,7 +31,6 @@ import retrofit2.Response
 
 
 class HomeFragment : Fragment() {
-    private lateinit var homeViewModel: HomeViewModel
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinnerFilter: Spinner
@@ -63,11 +63,6 @@ class HomeFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        val list = getList()
-        for (e in list) {
-            Log.d("tesztek", "${e.name}")
-        }
-
         recyclerView.addOnScrollListener(object :
             PaginationScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
             override fun isLastPage(): Boolean {
@@ -131,9 +126,9 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val chartType = resources.getStringArray(R.array.Filter)
+        val type = resources.getStringArray(R.array.Filter)
         val adapter =
-            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, chartType) }
+            context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, type) }
         spinnerFilter.adapter = adapter
 
         spinnerFilter.onItemSelectedListener = object :
@@ -142,39 +137,182 @@ class HomeFragment : Fragment() {
                 parent: AdapterView<*>,
                 view: View, position: Int, id: Long
             ) {
-                if (chartType[position] == "None" || chartType[position] == "Fav") {
+                if(type[position]=="None"){
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE
                 }
-                if (chartType[position] == "Name" || chartType[position] == "Price") {
+                if (type[position] == "Fav") {
+                    btnSearch.visibility = View.VISIBLE
+                    editSearch.visibility = View.GONE
+                    spinnerCity.visibility = View.GONE
+                    val listOfRestaurants = mutableListOf<RestaurantsDataClass>()
+                    if (type[position] == "Fav") {
+                        AsyncTask.execute {
+                            val idd =
+                                AppDatabase.getDatabase(context!!).profileDAO().getFavorites(16)
+                            val list = getListFromString(idd)
+
+                            for (e in list) {
+
+                                herokuAPI.endpoints.getRestaurantsByID(
+                                    e.toInt()
+                                )
+                                    .enqueue(object : Callback<RestaurantsDataClass> {
+                                        override fun onResponse(
+                                            call: Call<RestaurantsDataClass>,
+                                            response: Response<RestaurantsDataClass>
+                                        ) {
+                                            if (response.isSuccessful) {
+                                                listOfRestaurants.add(response.body()!!)
+                                            }
+                                        }
+
+                                        override fun onFailure(
+                                            call: Call<RestaurantsDataClass>,
+                                            t: Throwable
+                                        ) {
+                                            Log.d("onFailure", "Here DetailFragment")
+                                        }
+                                    })
+
+                            }
+
+                        }
+                        btnSearch.setOnClickListener {
+                            recyclerView.adapter = CustomAdapter(listOfRestaurants)
+                        }
+                    }
+                }
+                if (type[position] == "Name" || type[position] == "Price") {
                     spinnerCity.visibility = View.GONE
                     btnSearch.visibility = View.VISIBLE
                     editSearch.visibility = View.VISIBLE
-                    btnSearch.setOnClickListener {
-                        herokuAPI.endpoints.getRestaurantsByPrice("IL", 25,editSearch.text.toString().toInt())
-                            .enqueue(object : Callback<ResponseDataClass> {
-                                override fun onResponse(
-                                    call: Call<ResponseDataClass>,
-                                    response: Response<ResponseDataClass>
-                                ) {
-                                    if (response.isSuccessful) {
-                                        recyclerView.adapter = CustomAdapter(response.body()!!.restaurants)
+                    if (type[position] == "Price") {
+                        btnSearch.setOnClickListener {
+                            herokuAPI.endpoints.getRestaurantsByPrice(
+                                "IL",
+                                25,
+                                editSearch.text.toString().toInt()
+                            )
+                                .enqueue(object : Callback<ResponseDataClass> {
+                                    override fun onResponse(
+                                        call: Call<ResponseDataClass>,
+                                        response: Response<ResponseDataClass>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            recyclerView.adapter =
+                                                CustomAdapter(response.body()!!.restaurants)
 
+                                        }
                                     }
-                                }
-                                override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
-                                    Log.d("onFailure", "Here DetailFragment")
-                                }
-                            })
+
+                                    override fun onFailure(
+                                        call: Call<ResponseDataClass>,
+                                        t: Throwable
+                                    ) {
+                                        Log.d("onFailure", "Here DetailFragment")
+                                    }
+                                })
+                        }
+
                     }
+                    if (type[position] == "Name") {
+                        btnSearch.setOnClickListener {
+                            herokuAPI.endpoints.getRestaurantsByName(
+                                editSearch.text.toString()
+                            )
+                                .enqueue(object : Callback<ResponseDataClass> {
+                                    override fun onResponse(
+                                        call: Call<ResponseDataClass>,
+                                        response: Response<ResponseDataClass>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            recyclerView.adapter =
+                                                CustomAdapter(response.body()!!.restaurants)
 
+                                        }
+                                    }
 
+                                    override fun onFailure(
+                                        call: Call<ResponseDataClass>,
+                                        t: Throwable
+                                    ) {
+                                        Log.d("onFailure", "Here DetailFragment")
+                                    }
+                                })
+                        }
+
+                    }
                 }
-                if (chartType[position] == "City") {
+                if (type[position] == "City") {
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.VISIBLE
+
+                    herokuAPI.endpoints.getCities()
+                        .enqueue(object : Callback<CityDataClass> {
+                            override fun onResponse(
+                                call: Call<CityDataClass>,
+                                response: Response<CityDataClass>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val cType = response.body()!!.city
+                                    val adapter =
+                                        context?.let {
+                                            ArrayAdapter(
+                                                it,
+                                                android.R.layout.simple_spinner_item,
+                                                cType
+                                            )
+                                        }
+                                    spinnerCity.adapter = adapter
+                                    spinnerCity.onItemSelectedListener = object :
+                                        AdapterView.OnItemSelectedListener {
+                                        override fun onItemSelected(
+                                            parent: AdapterView<*>,
+                                            view: View, position: Int, id: Long
+                                        ) {
+                                            herokuAPI.endpoints.getRestaurantsByCity(
+                                                cType[position]
+                                            )
+                                                .enqueue(object : Callback<ResponseDataClass> {
+                                                    override fun onResponse(
+                                                        call: Call<ResponseDataClass>,
+                                                        response: Response<ResponseDataClass>
+                                                    ) {
+                                                        if (response.isSuccessful) {
+                                                            recyclerView.adapter =
+                                                                CustomAdapter(response.body()!!.restaurants)
+
+                                                        }
+                                                    }
+
+                                                    override fun onFailure(
+                                                        call: Call<ResponseDataClass>,
+                                                        t: Throwable
+                                                    ) {
+                                                        Log.d("onFailure", "Here DetailFragment")
+                                                    }
+                                                })
+                                        }
+
+                                        override fun onNothingSelected(parent: AdapterView<*>) {
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                            override fun onFailure(
+                                call: Call<CityDataClass>,
+                                t: Throwable
+                            ) {
+                                Log.d("onFailure", "Here DetailFragment")
+                            }
+                        })
+
 
                 }
             }
@@ -184,6 +322,7 @@ class HomeFragment : Fragment() {
 
         }
     }
+
     fun getList(): ArrayList<RestaurantsDataClass> {
         val gson = Gson()
         val json = sharedPreferences1.getString("Restaurants", null)
@@ -191,5 +330,13 @@ class HomeFragment : Fragment() {
             TypeToken<ArrayList<RestaurantsDataClass>>() {}.type//converting the json to list
         return gson.fromJson(json, type)//returning the list
     }
+
+    private fun getListFromString(json: String): ArrayList<String> {
+        val gson = Gson()
+        val type = object :
+            TypeToken<ArrayList<String>>() {}.type//converting the json to list
+        return gson.fromJson(json, type)//returning the list
+    }
+
 
 }

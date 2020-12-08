@@ -12,19 +12,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.android.service.androidproject.API.ResponseDataClass
 import com.android.service.androidproject.API.herokuAPI
-import com.android.service.androidproject.ui.home.HomeViewModel
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class SplashActivity : AppCompatActivity() {
-    private lateinit var profileViewModel: HomeViewModel
     private var context = this@SplashActivity
     private var requestCode = 123
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
         requestAllPermissions()
 
         val sharedPreferences: SharedPreferences =

@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.android.service.androidproject.API.ResponseDataClass
+import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.R
 import com.android.service.androidproject.bitMapToString
 import com.android.service.androidproject.room.Profile
@@ -48,20 +50,21 @@ class ProfileFragment : Fragment() {
         profPhone = root.findViewById(R.id.profPhone)
         profImg = root.findViewById(R.id.profImg)
         btnModify = root.findViewById(R.id.btnModify)
-        val list = listOf("1222")
+        val list =listOf("147604","149062")
         val gson = Gson()
         val json = gson.toJson(list)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        /*profileViewModel.insert(
+      /* profileViewModel.insert(
             Profile(
                 "Arni",
                 "Romania",
                 "0749091739",
                 "arnoldszasz06@gmail.com",
                 json,
-                ""
+                "",
+                "{\"address\":\"1320 Fifth Ave\",\"city\":\"Moline\",\"id\":\"114373\",\"lat\":\"41.505273\",\"lng\":\"-90.51788\",\"name\":\"Barley \\u0026 Rye\",\"phone\":\"3097571557x\",\"price\":\"2\",\"image_url\":\"https://www.opentable.com/img/restimages/114373.jpg\"}"
             )
-        )*/
+       )*/
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
             val index = profile.lastIndex
             Log.d("testpro", "${profile[index]}, $index")
@@ -81,6 +84,8 @@ class ProfileFragment : Fragment() {
         }
         return root
     }
+
+
 
 }
 

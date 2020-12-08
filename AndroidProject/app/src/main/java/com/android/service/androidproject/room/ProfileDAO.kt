@@ -17,6 +17,8 @@ interface ProfileDAO {
 
     @Query("SELECT favorite from profile where uid = :id")
     fun getFavorites(id: Int): String
+    @Query("SELECT favRes from profile where uid = :id")
+    fun getFavoriteRestaurants(id: Int): String
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(profile: Profile)
