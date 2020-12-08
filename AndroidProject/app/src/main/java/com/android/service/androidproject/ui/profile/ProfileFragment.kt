@@ -32,7 +32,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profFavorites: TextView
     private lateinit var profEmail: TextView
     private lateinit var btnModify: Button
-    private lateinit var yourBitmap: Bitmap
+
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -48,7 +48,7 @@ class ProfileFragment : Fragment() {
         profPhone = root.findViewById(R.id.profPhone)
         profImg = root.findViewById(R.id.profImg)
         btnModify = root.findViewById(R.id.btnModify)
-        val list = listOf("1222", "5555", "99845")
+        val list = listOf("1222")
         val gson = Gson()
         val json = gson.toJson(list)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)

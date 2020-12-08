@@ -10,4 +10,5 @@
     <string name="address">Address</string>
     <string name="phone_number">Phone number</string>
     <string name="e_mail">E-mail</string>
+    <string name="favorite">Favorite</string>
 </resources>

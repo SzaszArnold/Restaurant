@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,8 @@ import com.android.service.androidproject.API.herokuAPI
 import com.android.service.androidproject.R
 import com.android.service.androidproject.recycle.CustomAdapter
 import com.android.service.androidproject.recycle.PaginationScrollListener
+import com.android.service.androidproject.ui.profile.ProfileViewModel
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -27,8 +31,8 @@ import retrofit2.Response
 
 
 class HomeFragment : Fragment() {
-
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var profileViewModel: ProfileViewModel
     private lateinit var recyclerView: RecyclerView
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
@@ -41,14 +45,12 @@ class HomeFragment : Fragment() {
     ): View? {
         sharedPreferences1 =
             requireContext().getSharedPreferences("Restaurants", Context.MODE_PRIVATE)
-        homeViewModel =
-            ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val list = getList()
         for (e in list) {
             Log.d("tesztek", "${e.name}")
         }
-
         recyclerView = root.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = CustomAdapter(getList())

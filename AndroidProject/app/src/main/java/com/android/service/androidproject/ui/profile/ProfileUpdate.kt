@@ -27,7 +27,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class ProfileUpdate : Fragment() {
-    private lateinit var yourBitmap: Bitmap
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var profName: EditText
     private lateinit var profAddress: EditText

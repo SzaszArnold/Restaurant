@@ -12,6 +12,12 @@ interface ProfileDAO {
     @Update
     suspend fun update(profile: Profile)
 
+    @Query("UPDATE profile set favorite=:favorites where uid = :id")
+    suspend fun updateFavorites(id: Int, favorites: String)
+
+    @Query("SELECT favorite from profile where uid = :id")
+    suspend fun getFavorites(id: Int): String
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(profile: Profile)
 

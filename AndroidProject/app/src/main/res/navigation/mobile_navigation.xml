@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.android.service.androidproject.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -28,6 +32,11 @@
         <action
             android:id="@+id/action_profileUpdate_to_navigation_profile"
             app:destination="@id/navigation_profile" />
-    </fragment>/>
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.android.service.androidproject.ui.home.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/fragment_detail"/>/>
 
 </navigation>

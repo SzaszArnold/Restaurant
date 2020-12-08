@@ -1,18 +1,14 @@
 package com.android.service.androidproject.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.android.service.androidproject.API.ResponseDataClass
-import com.android.service.androidproject.API.RestaurantsDataClass
-import com.android.service.androidproject.API.herokuAPI
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import android.app.Application
+import android.content.ClipData
+import android.view.View
+import androidx.lifecycle.*
+import com.android.service.androidproject.room.AppDatabase
+import com.android.service.androidproject.room.Profile
+import com.android.service.androidproject.room.ProfileRepository
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
 }
