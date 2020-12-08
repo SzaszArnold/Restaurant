@@ -64,12 +64,11 @@ class ProfileFragment : Fragment() {
         )*/
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
             val index = profile.lastIndex
-            Log.d("testpro", "${profile[index]}")
+            Log.d("testpro", "${profile[index]}, $index")
             profName.text = "Name: " + profile[index].name
             profAddress.text = "Address: " + profile[index].adr
             profEmail.text = "E-mail: " + profile[index].email
             profPhone.text = "Phone: " + profile[index].phoneNr
-            profFavorites.text = "Fav: " + profile[index].favorites
             Glide.with(profImg)
                 .load(profile[index].img)
                 .override(500, 500)
@@ -83,11 +82,5 @@ class ProfileFragment : Fragment() {
         return root
     }
 
-    private fun getList(json: String): List<String> {
-        val gson = Gson()
-        val type = object :
-            TypeToken<List<String>>() {}.type//converting the json to list
-        return gson.fromJson(json, type)//returning the list
-    }
 }
 

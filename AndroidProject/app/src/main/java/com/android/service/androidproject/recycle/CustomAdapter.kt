@@ -53,7 +53,6 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         val resAddress: TextView
         val resPrice: TextView
         val resImg: ImageView
-        val resFavorites: CheckBox
         override fun onClick(view: View) {
             view.findNavController().navigate(R.id.action_navigation_home_to_detailFragment,bundle)
         }
@@ -63,8 +62,6 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
             resAddress = view.findViewById(R.id.rAddress)
             resPrice = view.findViewById(R.id.rPrice)
             resImg = view.findViewById(R.id.image_view)
-            resFavorites=view.findViewById(R.id.rCheckBox)
-
         }
 
     }

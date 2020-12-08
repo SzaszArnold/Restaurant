@@ -10,12 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.android.service.androidproject.API.ResponseDataClass
 import com.android.service.androidproject.API.herokuAPI
-import com.android.service.androidproject.ui.home.HomeFragment
 import com.android.service.androidproject.ui.home.HomeViewModel
-import com.android.service.androidproject.ui.profile.ProfileViewModel
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,43 +21,47 @@ import retrofit2.Response
 class SplashActivity : AppCompatActivity() {
     private lateinit var profileViewModel: HomeViewModel
     private var context = this@SplashActivity
-    private var requestCode=123
+    private var requestCode = 123
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         requestAllPermissions()
 
-       val sharedPreferences: SharedPreferences =
+        val sharedPreferences: SharedPreferences =
             getSharedPreferences("Restaurants", Context.MODE_PRIVATE)
-        herokuAPI.endpoints.getRestaurants("IL",25,1).enqueue(object : Callback<ResponseDataClass> {
-            override fun onResponse(
-                call: Call<ResponseDataClass>,
-                response: Response<ResponseDataClass>
-            ) {
-                if (response.isSuccessful) {
-                    try { val editor = sharedPreferences.edit()
-                        val gson = Gson()
-                        val json = gson.toJson(response.body()!!.restaurants)//converting list to Json
-                        Log.d("json", json)
-                        editor.putString("Restaurants",json)
-                        editor.commit()
-                        startActivity(Intent(context, MainActivity::class.java))
-                        finish()
-                    } catch (e: Exception) {
+        herokuAPI.endpoints.getRestaurants("IL", 25, 1)
+            .enqueue(object : Callback<ResponseDataClass> {
+                override fun onResponse(
+                    call: Call<ResponseDataClass>,
+                    response: Response<ResponseDataClass>
+                ) {
+                    if (response.isSuccessful) {
+                        try {
+                            val editor = sharedPreferences.edit()
+                            val gson = Gson()
+                            val json =
+                                gson.toJson(response.body()!!.restaurants)//converting list to Json
+                            Log.d("json", json)
+                            editor.putString("Restaurants", json)
+                            editor.commit()
+                            startActivity(Intent(context, MainActivity::class.java))
+                            finish()
+                        } catch (e: Exception) {
+                        }
+
+
+                        Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
                     }
-
-
-                    Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
                 }
-            }
 
-            override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
-                Toast.makeText(context, "Failed-onFailure", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
+                    Toast.makeText(context, "Failed-onFailure", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
+
     private fun requestAllPermissions() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.INTERNET)
             != PackageManager.PERMISSION_GRANTED

@@ -53,9 +53,6 @@ class ProfileUpdate : Fragment() {
         profImg = root.findViewById(R.id.profImg)
         btnSave = root.findViewById(R.id.btnModify)
         btnPick = root.findViewById(R.id.btnPick)
-        val list = listOf("1222", "5555", "99845")
-        val gson = Gson()
-        val json = gson.toJson(list)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
             val index = profile.lastIndex
@@ -78,7 +75,7 @@ class ProfileUpdate : Fragment() {
                     profAddress.text.toString(),
                     profPhone.text.toString(),
                     profEmail.text.toString(),
-                    json,
+                    profFavorites.text.toString(),
                     imageUri.toString()
                 )
             )

@@ -25,10 +25,4 @@ class ProfileRepository(private val profileDAO: ProfileDAO) {
     suspend fun updateFavorites(id: Int, favorites: String) {
         profileDAO.updateFavorites(id, favorites)
     }
-
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun getFavorites(id: Int):String {
-        return profileDAO.getFavorites(id)
-    }
 }

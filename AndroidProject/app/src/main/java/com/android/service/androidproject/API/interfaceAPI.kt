@@ -19,9 +19,11 @@ interface herokuAPI {
     @GET("countries")
     fun getCountries(): Call<JSONArray>
     @GET("cities")
-    fun getCities(): Call<JSONArray>
+    fun getCities(): Call<CityDataClass>
     @GET("restaurants/{id}")
     fun getRestaurantsByID(@Path("id")id: Int): Call<RestaurantsDataClass>
+    @GET("restaurants")
+    fun getRestaurantsByPrice(@Query("state")state: String, @Query("per_page")per_page: Int, @Query("price")current_page: Int): Call<ResponseDataClass>
     @GET("restaurants")
     fun getRestaurants(@Query("state")state: String, @Query("per_page")per_page: Int, @Query("page")current_page: Int): Call<ResponseDataClass>
     companion object {
