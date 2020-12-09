@@ -3,7 +3,6 @@ package com.android.service.androidproject.ui.home
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,10 +13,12 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.API.herokuAPI
 import com.android.service.androidproject.R
-import com.android.service.androidproject.room.AppDatabase
+import com.android.service.androidproject.room.Restaurants
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -34,6 +35,7 @@ class DetailFragment : Fragment() {
     private lateinit var resFavorites: CheckBox
     private lateinit var resMap: TextView
     private lateinit var resPhone: TextView
+    private lateinit var homeViewModel: HomeViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,6 +49,12 @@ class DetailFragment : Fragment() {
         resFavorites = root.findViewById(R.id.rCheckBox)
         resMap = root.findViewById(R.id.rMap)
         resPhone = root.findViewById(R.id.rPhone)
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+            homeViewModel.allRestaurants.observe(viewLifecycleOwner, Observer { restaurants ->
+                val index = restaurants.lastIndex
+                Log.d("testpro", "${restaurants[index]}, $index")
+
+            })
         requireArguments().getString("uid")?.let {
             herokuAPI.endpoints.getRestaurantsByID(it.toInt())
                 .enqueue(object : Callback<RestaurantsDataClass> {
@@ -70,25 +78,38 @@ class DetailFragment : Fragment() {
                                 .override(500, 500)
                                 .placeholder(R.drawable.ic_home_black_24dp)
                                 .into(resImg)
-                            resFavorites.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
+                            resFavorites.setOnCheckedChangeListener(object :
+                                CompoundButton.OnCheckedChangeListener {
                                 override fun onCheckedChanged(
                                     buttonView: CompoundButton?,
                                     isChecked: Boolean
                                 ) {
+                                    val restaurant = Restaurants(
+                                        response.body()!!.id,
+                                        response.body()!!.name,
+                                        response.body()!!.address,
+                                        response.body()!!.city,
+                                        response.body()!!.price,
+                                        response.body()!!.phone,
+                                        response.body()!!.lat,
+                                        response.body()!!.lng,
+                                        response.body()!!.url
+                                    )
+                                    homeViewModel.insert(restaurant)
 
-                                    AsyncTask.execute {
+                                    /*   AsyncTask.execute {
 
-                                        val favorites = AppDatabase.getDatabase(context!!)
-                                            .profileDAO().getFavorites(16)
-                                        val favList=getList(favorites)
-                                        favList.add(response.body()!!.id)
-                                        val gson = Gson()
-                                        val json = gson.toJson(favList)
-                                        context?.let { AppDatabase.getDatabase(it) }!!.profileDAO()!!.updateFavorites(16,json)
-                                        val favorit = AppDatabase.getDatabase(context!!)
-                                            .profileDAO().getFavorites(16)
-                                        Log.d("lassuk","$favorit")
-                                    }
+                                           val favorites = AppDatabase.getDatabase(context!!)
+                                               .profileDAO().getFavorites(16)
+                                           val favList=getList(favorites)
+                                           favList.add(response.body()!!.id)
+                                           val gson = Gson()
+                                           val json = gson.toJson(favList)
+                                           context?.let { AppDatabase.getDatabase(it) }!!.profileDAO()!!.updateFavorites(16,json)
+                                           val favorit = AppDatabase.getDatabase(context!!)
+                                               .profileDAO().getFavorites(16)
+                                           Log.d("lassuk","$favorit")
+                                       }*/
 
                                 }
                             })

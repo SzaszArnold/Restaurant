@@ -8,10 +8,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(Profile::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(Profile::class,Restaurants::class), version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun profileDAO(): ProfileDAO
+    abstract fun restaurantDAO(): RestaurantsDAO
 
     private class WordDatabaseCallback(
         private val scope: CoroutineScope

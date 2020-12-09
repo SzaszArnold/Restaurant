@@ -34,6 +34,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         holder: ViewHolder,
         position: Int
     ) {
+        Log.d("Belepett","1x")
         holder.resName.text = "Name: " + data[position].name
         holder.resAddress.text = "Address: " + data[position].address
         holder.resPrice.text = "Price: " + data[position].price

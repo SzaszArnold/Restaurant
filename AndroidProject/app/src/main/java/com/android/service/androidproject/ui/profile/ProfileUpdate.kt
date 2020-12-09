@@ -48,7 +48,6 @@ class ProfileUpdate : Fragment() {
         profImg = root.findViewById(R.id.profImg)
         btnSave = root.findViewById(R.id.btnModify)
         btnPick = root.findViewById(R.id.btnPick)
-        var resList = ""
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
             val index = profile.lastIndex
@@ -57,7 +56,7 @@ class ProfileUpdate : Fragment() {
             profEmail.setText(profile[index].email)
             profPhone.setText(profile[index].phoneNr)
             profFavorites.setText(profile[index].favorites)
-            resList = profile[index].favRes
+
             Glide.with(profImg)
                 .load(profile[index].img)
                 .centerCrop()
@@ -74,8 +73,7 @@ class ProfileUpdate : Fragment() {
                     profPhone.text.toString(),
                     profEmail.text.toString(),
                     profFavorites.text.toString(),
-                    imageUri.toString(),
-                    resList
+                    imageUri.toString()
 
                 )
             )

@@ -61,8 +61,7 @@ class ProfileFragment : Fragment() {
                 "0749091739",
                 "arnoldszasz06@gmail.com",
                 json,
-                "",
-                "{\"address\":\"1320 Fifth Ave\",\"city\":\"Moline\",\"id\":\"114373\",\"lat\":\"41.505273\",\"lng\":\"-90.51788\",\"name\":\"Barley \\u0026 Rye\",\"phone\":\"3097571557x\",\"price\":\"2\",\"image_url\":\"https://www.opentable.com/img/restimages/114373.jpg\"}"
+                ""
             )
        )*/
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->

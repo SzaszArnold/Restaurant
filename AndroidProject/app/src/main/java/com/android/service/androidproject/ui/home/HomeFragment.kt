@@ -2,7 +2,6 @@ package com.android.service.androidproject.ui.home
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +21,6 @@ import com.android.service.androidproject.API.herokuAPI
 import com.android.service.androidproject.R
 import com.android.service.androidproject.recycle.CustomAdapter
 import com.android.service.androidproject.recycle.PaginationScrollListener
-import com.android.service.androidproject.room.AppDatabase
-import com.android.service.androidproject.ui.profile.ProfileViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -31,7 +29,7 @@ import retrofit2.Response
 
 
 class HomeFragment : Fragment() {
-    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinnerFilter: Spinner
     private lateinit var spinnerCity: Spinner
@@ -46,9 +44,10 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
         sharedPreferences1 =
             requireContext().getSharedPreferences("Restaurants", Context.MODE_PRIVATE)
-        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         spinnerFilter = root.findViewById(R.id.spinnerFilter)
         spinnerCity = root.findViewById(R.id.spinnerCity)
@@ -137,7 +136,7 @@ class HomeFragment : Fragment() {
                 parent: AdapterView<*>,
                 view: View, position: Int, id: Long
             ) {
-                if(type[position]=="None"){
+                if (type[position] == "None") {
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE
@@ -146,43 +145,74 @@ class HomeFragment : Fragment() {
                     btnSearch.visibility = View.VISIBLE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE
-                    val listOfRestaurants = mutableListOf<RestaurantsDataClass>()
-                    if (type[position] == "Fav") {
-                        AsyncTask.execute {
-                            val idd =
-                                AppDatabase.getDatabase(context!!).profileDAO().getFavorites(16)
-                            val list = getListFromString(idd)
-
-                            for (e in list) {
-
-                                herokuAPI.endpoints.getRestaurantsByID(
-                                    e.toInt()
-                                )
-                                    .enqueue(object : Callback<RestaurantsDataClass> {
-                                        override fun onResponse(
-                                            call: Call<RestaurantsDataClass>,
-                                            response: Response<RestaurantsDataClass>
-                                        ) {
-                                            if (response.isSuccessful) {
-                                                listOfRestaurants.add(response.body()!!)
-                                            }
-                                        }
-
-                                        override fun onFailure(
-                                            call: Call<RestaurantsDataClass>,
-                                            t: Throwable
-                                        ) {
-                                            Log.d("onFailure", "Here DetailFragment")
-                                        }
-                                    })
-
+                    val list = arrayListOf<RestaurantsDataClass>()
+                    homeViewModel.allRestaurants.observe(
+                        viewLifecycleOwner,
+                        Observer { restaurants ->
+                            for (e in restaurants) {
+                                val restaurantsDataClass = RestaurantsDataClass()
+                                restaurantsDataClass.address = e.adr
+                                restaurantsDataClass.name = e.name
+                                restaurantsDataClass.url = e.img_url
+                                restaurantsDataClass.lng = e.lng
+                                restaurantsDataClass.lat = e.lat
+                                restaurantsDataClass.city = e.city
+                                restaurantsDataClass.id=e.id
+                                restaurantsDataClass.phone=e.phone
+                                restaurantsDataClass.price=e.price
+                                list.add(restaurantsDataClass)
                             }
+                        Log.d("testpro","$list")
 
-                        }
-                        btnSearch.setOnClickListener {
-                            recyclerView.adapter = CustomAdapter(listOfRestaurants)
-                        }
+
+                        })
+                    btnSearch.setOnClickListener {
+
+                        recyclerView.layoutManager = LinearLayoutManager(context)
+                        recyclerView.adapter = CustomAdapter(list)
+                        recyclerView.addItemDecoration(
+                            DividerItemDecoration(
+                                context,
+                                DividerItemDecoration.VERTICAL
+                            )
+                        )
                     }
+                    //   val listOfRestaurants = mutableListOf<RestaurantsDataClass>()
+
+                    /*   AsyncTask.execute {
+                           val idd =
+                               AppDatabase.getDatabase(context!!).profileDAO().getFavorites(16)
+                           val list = getListFromString(idd)
+
+                           for (e in list) {
+
+                               herokuAPI.endpoints.getRestaurantsByID(
+                                   e.toInt()
+                               )
+                                   .enqueue(object : Callback<RestaurantsDataClass> {
+                                       override fun onResponse(
+                                           call: Call<RestaurantsDataClass>,
+                                           response: Response<RestaurantsDataClass>
+                                       ) {
+                                           if (response.isSuccessful) {
+                                               listOfRestaurants.add(response.body()!!)
+                                           }
+                                       }
+
+                                       override fun onFailure(
+                                           call: Call<RestaurantsDataClass>,
+                                           t: Throwable
+                                       ) {
+                                           Log.d("onFailure", "Here DetailFragment")
+                                       }
+                                   })
+
+                           }
+
+                       }
+
+                       }*/
+
                 }
                 if (type[position] == "Name" || type[position] == "Price") {
                     spinnerCity.visibility = View.GONE
