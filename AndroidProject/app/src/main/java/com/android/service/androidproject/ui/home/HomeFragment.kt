@@ -177,42 +177,6 @@ class HomeFragment : Fragment() {
                             )
                         )
                     }
-                    //   val listOfRestaurants = mutableListOf<RestaurantsDataClass>()
-
-                    /*   AsyncTask.execute {
-                           val idd =
-                               AppDatabase.getDatabase(context!!).profileDAO().getFavorites(16)
-                           val list = getListFromString(idd)
-
-                           for (e in list) {
-
-                               herokuAPI.endpoints.getRestaurantsByID(
-                                   e.toInt()
-                               )
-                                   .enqueue(object : Callback<RestaurantsDataClass> {
-                                       override fun onResponse(
-                                           call: Call<RestaurantsDataClass>,
-                                           response: Response<RestaurantsDataClass>
-                                       ) {
-                                           if (response.isSuccessful) {
-                                               listOfRestaurants.add(response.body()!!)
-                                           }
-                                       }
-
-                                       override fun onFailure(
-                                           call: Call<RestaurantsDataClass>,
-                                           t: Throwable
-                                       ) {
-                                           Log.d("onFailure", "Here DetailFragment")
-                                       }
-                                   })
-
-                           }
-
-                       }
-
-                       }*/
-
                 }
                 if (type[position] == "Name" || type[position] == "Price") {
                     spinnerCity.visibility = View.GONE
@@ -231,8 +195,16 @@ class HomeFragment : Fragment() {
                                         response: Response<ResponseDataClass>
                                     ) {
                                         if (response.isSuccessful) {
+                                            recyclerView.layoutManager = LinearLayoutManager(context)
                                             recyclerView.adapter =
                                                 CustomAdapter(response.body()!!.restaurants)
+                                            recyclerView.addItemDecoration(
+                                                DividerItemDecoration(
+                                                    context,
+                                                    DividerItemDecoration.VERTICAL
+                                                )
+                                            )
+
 
                                         }
                                     }
@@ -258,8 +230,15 @@ class HomeFragment : Fragment() {
                                         response: Response<ResponseDataClass>
                                     ) {
                                         if (response.isSuccessful) {
+                                            recyclerView.layoutManager = LinearLayoutManager(context)
                                             recyclerView.adapter =
                                                 CustomAdapter(response.body()!!.restaurants)
+                                            recyclerView.addItemDecoration(
+                                                DividerItemDecoration(
+                                                    context,
+                                                    DividerItemDecoration.VERTICAL
+                                                )
+                                            )
 
                                         }
                                     }
@@ -312,8 +291,15 @@ class HomeFragment : Fragment() {
                                                         response: Response<ResponseDataClass>
                                                     ) {
                                                         if (response.isSuccessful) {
+                                                            recyclerView.layoutManager = LinearLayoutManager(context)
                                                             recyclerView.adapter =
                                                                 CustomAdapter(response.body()!!.restaurants)
+                                                            recyclerView.addItemDecoration(
+                                                                DividerItemDecoration(
+                                                                    context,
+                                                                    DividerItemDecoration.VERTICAL
+                                                                )
+                                                            )
 
                                                         }
                                                     }
@@ -360,13 +346,5 @@ class HomeFragment : Fragment() {
             TypeToken<ArrayList<RestaurantsDataClass>>() {}.type//converting the json to list
         return gson.fromJson(json, type)//returning the list
     }
-
-    private fun getListFromString(json: String): ArrayList<String> {
-        val gson = Gson()
-        val type = object :
-            TypeToken<ArrayList<String>>() {}.type//converting the json to list
-        return gson.fromJson(json, type)//returning the list
-    }
-
 
 }

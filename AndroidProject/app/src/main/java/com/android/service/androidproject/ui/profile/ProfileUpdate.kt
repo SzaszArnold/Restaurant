@@ -65,7 +65,6 @@ class ProfileUpdate : Fragment() {
                 .into(profImg)
         })
         btnSave.setOnClickListener { view: View ->
-
             profileViewModel.update(
                 Profile(
                     profName.text.toString(),

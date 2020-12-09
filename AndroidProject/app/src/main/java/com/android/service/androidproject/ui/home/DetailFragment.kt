@@ -1,6 +1,7 @@
 package com.android.service.androidproject.ui.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,8 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -36,6 +37,8 @@ class DetailFragment : Fragment() {
     private lateinit var resMap: TextView
     private lateinit var resPhone: TextView
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var btnChange: Button
+    private var imageUri: Uri? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,12 +52,13 @@ class DetailFragment : Fragment() {
         resFavorites = root.findViewById(R.id.rCheckBox)
         resMap = root.findViewById(R.id.rMap)
         resPhone = root.findViewById(R.id.rPhone)
+        btnChange = root.findViewById(R.id.changeBtn)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-            homeViewModel.allRestaurants.observe(viewLifecycleOwner, Observer { restaurants ->
-                val index = restaurants.lastIndex
-                Log.d("testpro", "${restaurants[index]}, $index")
+        homeViewModel.allRestaurants.observe(viewLifecycleOwner, Observer { restaurants ->
+            val index = restaurants.lastIndex
+            Log.d("testpro", "${restaurants[index]}, $index")
 
-            })
+        })
         requireArguments().getString("uid")?.let {
             herokuAPI.endpoints.getRestaurantsByID(it.toInt())
                 .enqueue(object : Callback<RestaurantsDataClass> {
@@ -78,12 +82,22 @@ class DetailFragment : Fragment() {
                                 .override(500, 500)
                                 .placeholder(R.drawable.ic_home_black_24dp)
                                 .into(resImg)
-                            resFavorites.setOnCheckedChangeListener(object :
-                                CompoundButton.OnCheckedChangeListener {
-                                override fun onCheckedChanged(
-                                    buttonView: CompoundButton?,
-                                    isChecked: Boolean
-                                ) {
+                            resFavorites.setOnCheckedChangeListener { buttonView, isChecked ->
+                                if (imageUri != null) {
+                                    val restaurant = Restaurants(
+                                        response.body()!!.id,
+                                        response.body()!!.name,
+                                        response.body()!!.address,
+                                        response.body()!!.city,
+                                        response.body()!!.price,
+                                        response.body()!!.phone,
+                                        response.body()!!.lat,
+                                        response.body()!!.lng,
+                                        imageUri.toString()
+                                    )
+                                    homeViewModel.insert(restaurant)
+                                }
+                                else{
                                     val restaurant = Restaurants(
                                         response.body()!!.id,
                                         response.body()!!.name,
@@ -96,23 +110,8 @@ class DetailFragment : Fragment() {
                                         response.body()!!.url
                                     )
                                     homeViewModel.insert(restaurant)
-
-                                    /*   AsyncTask.execute {
-
-                                           val favorites = AppDatabase.getDatabase(context!!)
-                                               .profileDAO().getFavorites(16)
-                                           val favList=getList(favorites)
-                                           favList.add(response.body()!!.id)
-                                           val gson = Gson()
-                                           val json = gson.toJson(favList)
-                                           context?.let { AppDatabase.getDatabase(it) }!!.profileDAO()!!.updateFavorites(16,json)
-                                           val favorit = AppDatabase.getDatabase(context!!)
-                                               .profileDAO().getFavorites(16)
-                                           Log.d("lassuk","$favorit")
-                                       }*/
-
                                 }
-                            })
+                            }
                         }
                     }
 
@@ -120,9 +119,10 @@ class DetailFragment : Fragment() {
                         Log.d("onFailure", "Here DetailFragment")
                     }
                 })
-
         }
-
+        btnChange.setOnClickListener {
+            pickImageFromGallery()
+        }
         resPhone.setOnClickListener {
             val intent =
                 Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "${resPhone.hint}"))
@@ -138,10 +138,26 @@ class DetailFragment : Fragment() {
         return root
     }
 
-    private fun getList(json: String): ArrayList<String> {
-        val gson = Gson()
-        val type = object :
-            TypeToken<ArrayList<String>>() {}.type//converting the json to list
-        return gson.fromJson(json, type)//returning the list
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+    companion object {
+        private val IMAGE_PICK_CODE = 1000;
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+            imageUri = data?.data
+            Glide.with(resImg)
+                .load(imageUri)
+                .centerCrop()
+                .override(500, 500)
+                .placeholder(R.drawable.ic_home_black_24dp)
+                .into(resImg)
+        }
     }
 }

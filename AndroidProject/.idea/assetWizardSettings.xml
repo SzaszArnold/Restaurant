@@ -79,8 +79,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\arni-\Desktop\Where-to-Eat-420x420-2.png" />
-                                                <entry key="scalingPercent" value="87" />
+                                                <entry key="imagePath" value="C:\Users\arni-\Desktop\beauty-soft-yellow-watercolor-background_3785-259.jpg" />
+                                                <entry key="scalingPercent" value="107" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -108,6 +108,11 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="outputName" value="splash" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -284,6 +289,11 @@
                 </map>
               </option>
             </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState />
           </value>
         </entry>
       </map>

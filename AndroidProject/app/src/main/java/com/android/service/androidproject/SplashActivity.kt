@@ -47,9 +47,6 @@ class SplashActivity : AppCompatActivity() {
                             finish()
                         } catch (e: Exception) {
                         }
-
-
-                        Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
                     }
