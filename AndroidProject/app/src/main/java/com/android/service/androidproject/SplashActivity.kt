@@ -28,7 +28,7 @@ class SplashActivity : AppCompatActivity() {
 
         val sharedPreferences: SharedPreferences =
             getSharedPreferences("Restaurants", Context.MODE_PRIVATE)
-        herokuAPI.endpoints.getRestaurants("IL", 25, 1)
+        herokuAPI.endpoints.getRestaurants("US", 25, 1)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
                     call: Call<ResponseDataClass>,

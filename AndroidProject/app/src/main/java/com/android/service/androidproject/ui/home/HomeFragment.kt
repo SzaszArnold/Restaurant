@@ -90,7 +90,7 @@ class HomeFragment : Fragment() {
 
 
     private fun getMoreItems() {
-        herokuAPI.endpoints.getRestaurants("IL", 25, page)
+        herokuAPI.endpoints.getRestaurants("US", 25, page)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
                     call: Call<ResponseDataClass>,
@@ -185,7 +185,7 @@ class HomeFragment : Fragment() {
                     if (type[position] == "Price") {
                         btnSearch.setOnClickListener {
                             herokuAPI.endpoints.getRestaurantsByPrice(
-                                "IL",
+                                "US",
                                 25,
                                 editSearch.text.toString().toInt()
                             )

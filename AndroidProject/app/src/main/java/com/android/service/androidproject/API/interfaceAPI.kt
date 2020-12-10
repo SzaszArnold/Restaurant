@@ -12,7 +12,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-val BASE_URL_API = "http://opentable.herokuapp.com/api/"
+val BASE_URL_API = "https://ratpark-api.imok.space/"//"http://opentable.herokuapp.com/api/"
+
 interface herokuAPI {
     @GET("stats")
     fun getStats(): Call<JSONArray>
@@ -27,9 +28,9 @@ interface herokuAPI {
     @GET("restaurants")
     fun getRestaurantsByCity(@Query("city")city: String): Call<ResponseDataClass>
     @GET("restaurants")
-    fun getRestaurantsByPrice(@Query("state")state: String, @Query("per_page")per_page: Int, @Query("price")current_page: Int): Call<ResponseDataClass>
+    fun getRestaurantsByPrice(@Query("country")state: String, @Query("per_page")per_page: Int, @Query("price")current_page: Int): Call<ResponseDataClass>
     @GET("restaurants")
-    fun getRestaurants(@Query("state")state: String, @Query("per_page")per_page: Int, @Query("page")current_page: Int): Call<ResponseDataClass>
+    fun getRestaurants(@Query("country")state: String, @Query("per_page")per_page: Int, @Query("page")current_page: Int): Call<ResponseDataClass>
     companion object {
         private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         private val okHttp = OkHttpClient.Builder().addInterceptor(logger)
