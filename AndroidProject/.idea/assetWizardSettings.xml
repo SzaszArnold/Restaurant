@@ -79,8 +79,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\arni-\Desktop\beauty-soft-yellow-watercolor-background_3785-259.jpg" />
-                                                <entry key="scalingPercent" value="107" />
+                                                <entry key="imagePath" value="C:\Users\arni-\Desktop\prof.jpg" />
+                                                <entry key="scalingPercent" value="112" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -112,7 +112,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="splash" />
+                                      <entry key="outputName" value="profile" />
                                     </map>
                                   </option>
                                 </PersistentState>

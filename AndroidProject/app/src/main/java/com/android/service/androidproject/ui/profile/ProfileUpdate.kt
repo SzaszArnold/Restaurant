@@ -27,7 +27,6 @@ class ProfileUpdate : Fragment() {
     private lateinit var profAddress: EditText
     private lateinit var profPhone: EditText
     private lateinit var profImg: ImageView
-    private lateinit var profFavorites: EditText
     private lateinit var profEmail: EditText
     private lateinit var btnSave: Button
     private lateinit var btnPick: Button
@@ -43,7 +42,6 @@ class ProfileUpdate : Fragment() {
         profName = root.findViewById(R.id.profName)
         profAddress = root.findViewById(R.id.profAddress)
         profEmail = root.findViewById(R.id.profEmail)
-        profFavorites = root.findViewById(R.id.profFavorite)
         profPhone = root.findViewById(R.id.profPhone)
         profImg = root.findViewById(R.id.profImg)
         btnSave = root.findViewById(R.id.btnModify)
@@ -55,7 +53,6 @@ class ProfileUpdate : Fragment() {
             profAddress.setText(profile[index].adr)
             profEmail.setText(profile[index].email)
             profPhone.setText(profile[index].phoneNr)
-            profFavorites.setText(profile[index].favorites)
 
             Glide.with(profImg)
                 .load(profile[index].img)
@@ -71,7 +68,7 @@ class ProfileUpdate : Fragment() {
                     profAddress.text.toString(),
                     profPhone.text.toString(),
                     profEmail.text.toString(),
-                    profFavorites.text.toString(),
+                    "",
                     imageUri.toString()
 
                 )

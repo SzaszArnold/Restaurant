@@ -42,6 +42,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         Glide.with(holder.itemView)
             .load(data[position].url)
             .centerCrop()
+            .override(500, 500)
             .placeholder(R.drawable.ic_home_black_24dp)
             .into(holder.resImg)
     }

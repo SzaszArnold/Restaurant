@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -9,7 +10,28 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:layout_width="155dp"
+                android:layout_height="155dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="250dp">
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="250dp">
+
+                    <ImageView
+                        android:id="@+id/profImg"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:scaleType="centerCrop"
+                       />
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.cardview.widget.CardView>
             <EditText
                 android:id="@+id/profName"
                 android:layout_width="match_parent"
@@ -44,34 +66,35 @@
                 android:textAlignment="center"
                 android:inputType="textEmailAddress"
                 />
-            <EditText
-                android:id="@+id/profFavorite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="fav"
-                android:textAlignment="center"
 
-                />
 
-            <ImageView
-                android:id="@+id/profImg"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription="TODO" />
-
-            <Button
-                android:id="@+id/btnPick"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/pick_image" />
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnModify"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/save" />
+                <Button
+                    android:id="@+id/btnPick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:drawable/ic_menu_gallery"
+            />
+
+                <Button
+                    android:id="@+id/btnModify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:drawable/ic_menu_save"
+                   />
+
+
+            </LinearLayout>
+
 
 
         </LinearLayout>

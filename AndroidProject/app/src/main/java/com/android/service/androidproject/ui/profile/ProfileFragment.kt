@@ -31,7 +31,6 @@ class ProfileFragment : Fragment() {
     private lateinit var profAddress: TextView
     private lateinit var profPhone: TextView
     private lateinit var profImg: ImageView
-    private lateinit var profFavorites: TextView
     private lateinit var profEmail: TextView
     private lateinit var btnModify: Button
 
@@ -46,7 +45,6 @@ class ProfileFragment : Fragment() {
         profName = root.findViewById(R.id.profName)
         profAddress = root.findViewById(R.id.profAddress)
         profEmail = root.findViewById(R.id.profEmail)
-        profFavorites = root.findViewById(R.id.profFavorite)
         profPhone = root.findViewById(R.id.profPhone)
         profImg = root.findViewById(R.id.profImg)
         btnModify = root.findViewById(R.id.btnModify)
