@@ -39,6 +39,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         holder.resAddress.text = "Address: " + data[position].address
         holder.resPrice.text = "Price: " + data[position].price
         bundle= bundleOf("uid" to data[position].id)
+        Log.d("Belepett","${data[position].id}")
         Glide.with(holder.itemView)
             .load(data[position].url)
             .centerCrop()
