@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.android.service.androidproject.API.ResponseDataClass
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.API.herokuAPI
 import com.android.service.androidproject.R
+import com.android.service.androidproject.SplashViewModel
 import com.android.service.androidproject.recycle.CustomAdapter
 import com.android.service.androidproject.recycle.PaginationScrollListener
 import com.google.gson.Gson
@@ -30,6 +32,7 @@ import retrofit2.Response
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var splashViewModel: SplashViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinnerFilter: Spinner
     private lateinit var spinnerCity: Spinner
@@ -45,7 +48,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
+        splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         sharedPreferences1 =
             requireContext().getSharedPreferences("Restaurants", Context.MODE_PRIVATE)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -55,13 +58,16 @@ class HomeFragment : Fragment() {
         btnSearch = root.findViewById(R.id.button)
         recyclerView = root.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = CustomAdapter(getList())
         recyclerView.addItemDecoration(
             DividerItemDecoration(
                 context,
                 DividerItemDecoration.VERTICAL
             )
         )
+        splashViewModel.apisRestaurants.observe(viewLifecycleOwner, Observer { profile ->
+            recyclerView.adapter = CustomAdapter(profile)
+        })
+
         recyclerView.addOnScrollListener(object :
             PaginationScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
             override fun isLastPage(): Boolean {
@@ -75,52 +81,18 @@ class HomeFragment : Fragment() {
             override fun loadMoreItems() {
                 isLoading = true
                 Log.d("Belepett", "ide, page: $page")
-                getMoreItems()
+                splashViewModel.loadMore()
+                splashViewModel.page()
                 isLoading = false
-                recyclerView.adapter = CustomAdapter(getList())
+
 
             }
+
         })
 
 
 
-
         return root
-    }
-
-
-    private fun getMoreItems() {
-        herokuAPI.endpoints.getRestaurants("US", 25, page)
-            .enqueue(object : Callback<ResponseDataClass> {
-                override fun onResponse(
-                    call: Call<ResponseDataClass>,
-                    response: Response<ResponseDataClass>
-                ) {
-                    if (response.isSuccessful) {
-                        try {
-                            val editor = sharedPreferences1.edit()
-                            val list = getList()
-                            list.addAll(response.body()!!.restaurants)
-                            Log.d("sharedbol", "$list")
-                            val gson = Gson()
-                            val json = gson.toJson(list)//converting list to Json
-                            Log.d("json", json)
-                            editor.putString("Restaurants", json)
-                            editor.commit()
-                            page++
-                        } catch (e: Exception) {
-                        }
-
-                    } else {
-                        Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
-                    Toast.makeText(context, "Failed-onFailure", Toast.LENGTH_SHORT).show()
-                }
-            })
-
     }
 
     override fun onResume() {
@@ -337,14 +309,6 @@ class HomeFragment : Fragment() {
             }
 
         }
-    }
-
-    fun getList(): ArrayList<RestaurantsDataClass> {
-        val gson = Gson()
-        val json = sharedPreferences1.getString("Restaurants", null)
-        val type = object :
-            TypeToken<ArrayList<RestaurantsDataClass>>() {}.type//converting the json to list
-        return gson.fromJson(json, type)//returning the list
     }
 
 }

@@ -1,10 +1,14 @@
 package com.android.service.androidproject.ui.home
 
 import android.app.Application
-import android.content.ClipData
-import android.view.View
-import androidx.lifecycle.*
-import com.android.service.androidproject.room.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.android.service.androidproject.API.RestaurantsDataClass
+import com.android.service.androidproject.room.AppDatabase
+import com.android.service.androidproject.room.Restaurants
+import com.android.service.androidproject.room.RestaurantsRepository
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {

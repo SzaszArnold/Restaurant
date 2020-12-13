@@ -82,6 +82,7 @@ class DetailFragment : Fragment() {
                                 .override(500, 500)
                                 .placeholder(R.drawable.ic_home_black_24dp)
                                 .into(resImg)
+                            //TODO irjam át full bundelre
                             resFavorites.setOnCheckedChangeListener { buttonView, isChecked ->
                                 if (imageUri != null) {
                                     val restaurant = Restaurants(
