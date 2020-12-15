@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.android.service.androidproject.R
-import com.android.service.androidproject.room.Profile
 import com.android.service.androidproject.view.ProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -43,32 +42,39 @@ class ProfileFragment : Fragment() {
         profPhone = root.findViewById(R.id.profPhone)
         profImg = root.findViewById(R.id.profImg)
         btnModify = root.findViewById(R.id.btnModify)
-        val list =listOf("147604","149062")
+        val list = listOf("147604", "149062")
         val gson = Gson()
         val json = gson.toJson(list)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-      /* profileViewModel.insert(
-            Profile(
-                "Arni",
-                "Romania",
-                "0749091739",
-                "arnoldszasz06@gmail.com",
-                json,
-                ""
-            )
-       )*/
+        /* profileViewModel.insert(
+              Profile(
+                  "Arni",
+                  "Romania",
+                  "0749091739",
+                  "arnoldszasz06@gmail.com",
+                  json,
+                  ""
+              )
+         )*/
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
-            val index = profile.lastIndex
-            Log.d("testpro", "${profile[index]}, $index")
-            profName.text = "Name: " + profile[index].name
-            profAddress.text = "Address: " + profile[index].adr
-            profEmail.text = "E-mail: " + profile[index].email
-            profPhone.text = "Phone: " + profile[index].phoneNr
-            Glide.with(profImg)
-                .load(profile[index].img)
-                .override(500, 500)
-                .placeholder(R.drawable.ic_home_black_24dp)
-                .into(profImg)
+            if (profile.isEmpty()) {
+                profName.text = "Name: "
+                profAddress.text = "Address: "
+                profEmail.text = "E-mail: "
+                profPhone.text = "Phone: "
+            } else {
+                val index = profile.lastIndex
+                Log.d("testpro", "${profile[index]}, $index")
+                profName.text = "Name: " + profile[index].name
+                profAddress.text = "Address: " + profile[index].adr
+                profEmail.text = "E-mail: " + profile[index].email
+                profPhone.text = "Phone: " + profile[index].phoneNr
+                Glide.with(profImg)
+                    .load(profile[index].img)
+                    .override(500, 500)
+                    .placeholder(R.drawable.ic_home_black_24dp)
+                    .into(profImg)
+            }
         })
 
         btnModify.setOnClickListener { view: View ->
@@ -76,7 +82,6 @@ class ProfileFragment : Fragment() {
         }
         return root
     }
-
 
 
 }

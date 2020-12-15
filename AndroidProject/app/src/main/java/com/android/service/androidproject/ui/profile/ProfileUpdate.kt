@@ -52,18 +52,21 @@ class ProfileUpdate : Fragment() {
         btnPick = root.findViewById(R.id.btnPick)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
-            val index = profile.lastIndex
-            profName.setText(profile[index].name)
-            profAddress.setText(profile[index].adr)
-            profEmail.setText(profile[index].email)
-            profPhone.setText(profile[index].phoneNr)
+            if(profile.isNotEmpty()){
+                val index = profile.lastIndex
+                profName.setText(profile[index].name)
+                profAddress.setText(profile[index].adr)
+                profEmail.setText(profile[index].email)
+                profPhone.setText(profile[index].phoneNr)
 
-            Glide.with(profImg)
-                .load(profile[index].img)
-                .centerCrop()
-                .override(500, 500)
-                .placeholder(R.drawable.ic_home_black_24dp)
-                .into(profImg)
+                Glide.with(profImg)
+                    .load(profile[index].img)
+                    .centerCrop()
+                    .override(500, 500)
+                    .placeholder(R.drawable.ic_home_black_24dp)
+                    .into(profImg)
+            }
+
         })
         btnSave.setOnClickListener { view: View ->
             updateProfile()
@@ -118,7 +121,7 @@ class ProfileUpdate : Fragment() {
             return
         }
         if (!profAddress.text.toString().isValidName()){
-            Toast.makeText(context, "Invalid name.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Invalid adress.", Toast.LENGTH_SHORT).show()
             return
         }
         if (!profPhone.text.toString().isValidPhone()){
