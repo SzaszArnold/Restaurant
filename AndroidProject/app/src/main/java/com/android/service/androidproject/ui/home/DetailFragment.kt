@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.android.service.androidproject.R
+import com.android.service.androidproject.recycle.CustomAdapter
 import com.android.service.androidproject.room.Restaurants
 import com.android.service.androidproject.view.HomeViewModel
 import com.bumptech.glide.Glide
@@ -51,6 +52,11 @@ class DetailFragment : Fragment() {
         resPhone = root.findViewById(R.id.rPhone)
         btnChange = root.findViewById(R.id.changeBtn)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel.allRestaurants.observe(viewLifecycleOwner, Observer { profile ->
+            if(profile[profile.lastIndex].id==requireArguments().getString("uid")){
+                resFavorites.isChecked=true
+            }
+        })
         resName.text = "Name: " + requireArguments().getString("name")
         resAddress.text =
             "Address: " + requireArguments().getString("city") + ", " + requireArguments().getString(

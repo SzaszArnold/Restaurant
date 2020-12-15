@@ -17,4 +17,5 @@ class RestaurantsRepository(private val restaurantsDAO: RestaurantsDAO) {
     suspend fun delete() {
         restaurantsDAO.deleteAll()
     }
+
 }

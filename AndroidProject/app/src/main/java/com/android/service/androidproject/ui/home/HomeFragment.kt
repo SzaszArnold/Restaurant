@@ -9,22 +9,15 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.service.androidproject.API.CityDataClass
-import com.android.service.androidproject.API.ResponseDataClass
 import com.android.service.androidproject.API.RestaurantsDataClass
-import com.android.service.androidproject.API.herokuAPI
 import com.android.service.androidproject.R
-import com.android.service.androidproject.view.RestaurantsViewModel
 import com.android.service.androidproject.recycle.CustomAdapter
 import com.android.service.androidproject.recycle.PaginationScrollListener
 import com.android.service.androidproject.view.HomeViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.android.service.androidproject.view.RestaurantsViewModel
 
 
 class HomeFragment : Fragment() {
@@ -74,7 +67,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun loadMoreItems() {
-                restaurantsViewModel.isLoading=true
+                restaurantsViewModel.isLoading = true
                 loadMore()
 
             }
@@ -88,8 +81,7 @@ class HomeFragment : Fragment() {
         Log.d("Belepett", "Most ")
         restaurantsViewModel.loadMore()
         restaurantsViewModel.page++
-        restaurantsViewModel.isLoading=false
-
+        restaurantsViewModel.isLoading = false
 
 
     }
@@ -155,74 +147,13 @@ class HomeFragment : Fragment() {
                     editSearch.visibility = View.VISIBLE
                     if (type[position] == "Price") {
                         btnSearch.setOnClickListener {
-                            herokuAPI.endpoints.getRestaurantsByPrice(
-                                "US",
-                                25,
-                                editSearch.text.toString().toInt()
-                            )
-                                .enqueue(object : Callback<ResponseDataClass> {
-                                    override fun onResponse(
-                                        call: Call<ResponseDataClass>,
-                                        response: Response<ResponseDataClass>
-                                    ) {
-                                        if (response.isSuccessful) {
-                                            recyclerView.layoutManager =
-                                                LinearLayoutManager(context)
-                                            recyclerView.adapter =
-                                                CustomAdapter(response.body()!!.restaurants)
-                                            recyclerView.addItemDecoration(
-                                                DividerItemDecoration(
-                                                    context,
-                                                    DividerItemDecoration.VERTICAL
-                                                )
-                                            )
-
-
-                                        }
-                                    }
-
-                                    override fun onFailure(
-                                        call: Call<ResponseDataClass>,
-                                        t: Throwable
-                                    ) {
-                                        Log.d("onFailure", "Here DetailFragment")
-                                    }
-                                })
+                            restaurantsViewModel.loadPrice(editSearch.text.toString().toInt())
                         }
 
                     }
                     if (type[position] == "Name") {
                         btnSearch.setOnClickListener {
-                            herokuAPI.endpoints.getRestaurantsByName(
-                                editSearch.text.toString()
-                            )
-                                .enqueue(object : Callback<ResponseDataClass> {
-                                    override fun onResponse(
-                                        call: Call<ResponseDataClass>,
-                                        response: Response<ResponseDataClass>
-                                    ) {
-                                        if (response.isSuccessful) {
-                                            recyclerView.layoutManager =
-                                                LinearLayoutManager(context)
-                                            recyclerView.adapter =
-                                                CustomAdapter(response.body()!!.restaurants)
-                                            recyclerView.addItemDecoration(
-                                                DividerItemDecoration(
-                                                    context,
-                                                    DividerItemDecoration.VERTICAL
-                                                )
-                                            )
-
-                                        }
-                                    }
-
-                                    override fun onFailure(
-                                        call: Call<ResponseDataClass>,
-                                        t: Throwable
-                                    ) {
-                                        Log.d("onFailure", "Here DetailFragment")
-                                    }
-                                })
+                            restaurantsViewModel.loadName(editSearch.text.toString())
                         }
 
                     }
@@ -231,86 +162,40 @@ class HomeFragment : Fragment() {
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.VISIBLE
-
-                    herokuAPI.endpoints.getCities()
-                        .enqueue(object : Callback<CityDataClass> {
-                            override fun onResponse(
-                                call: Call<CityDataClass>,
-                                response: Response<CityDataClass>
-                            ) {
-                                if (response.isSuccessful) {
-                                    val cType = response.body()!!.city
-                                    val adapter =
-                                        context?.let {
-                                            ArrayAdapter(
-                                                it,
-                                                android.R.layout.simple_spinner_item,
-                                                cType
-                                            )
-                                        }
-                                    spinnerCity.adapter = adapter
-                                    spinnerCity.onItemSelectedListener = object :
-                                        AdapterView.OnItemSelectedListener {
-                                        override fun onItemSelected(
-                                            parent: AdapterView<*>,
-                                            view: View, position: Int, id: Long
-                                        ) {
-                                            herokuAPI.endpoints.getRestaurantsByCity(
-                                                cType[position]
-                                            )
-                                                .enqueue(object : Callback<ResponseDataClass> {
-                                                    override fun onResponse(
-                                                        call: Call<ResponseDataClass>,
-                                                        response: Response<ResponseDataClass>
-                                                    ) {
-                                                        if (response.isSuccessful) {
-                                                            recyclerView.layoutManager =
-                                                                LinearLayoutManager(context)
-                                                            recyclerView.adapter =
-                                                                CustomAdapter(response.body()!!.restaurants)
-                                                            recyclerView.addItemDecoration(
-                                                                DividerItemDecoration(
-                                                                    context,
-                                                                    DividerItemDecoration.VERTICAL
-                                                                )
-                                                            )
-
-                                                        }
-                                                    }
-
-                                                    override fun onFailure(
-                                                        call: Call<ResponseDataClass>,
-                                                        t: Throwable
-                                                    ) {
-                                                        Log.d("onFailure", "Here DetailFragment")
-                                                    }
-                                                })
-                                        }
-
-                                        override fun onNothingSelected(parent: AdapterView<*>) {
-                                        }
-
-                                    }
-
+                    restaurantsViewModel.loadCity()
+                    restaurantsViewModel.apisCities.observe(
+                        viewLifecycleOwner,
+                        Observer { city ->
+                            val cType = city.city
+                            val adapter =
+                                context?.let {
+                                    ArrayAdapter(
+                                        it,
+                                        android.R.layout.simple_spinner_item,
+                                        cType
+                                    )
                                 }
-                            }
+                            spinnerCity.adapter = adapter
+                            spinnerCity.onItemSelectedListener = object :
+                                AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    parent: AdapterView<*>,
+                                    view: View, position: Int, id: Long
+                                ) {
+                                    restaurantsViewModel.loadByCity( cType[position])
+                                }
 
-                            override fun onFailure(
-                                call: Call<CityDataClass>,
-                                t: Throwable
-                            ) {
-                                Log.d("onFailure", "Here DetailFragment")
-                            }
-                        })
+                                override fun onNothingSelected(parent: AdapterView<*>) {
+                                }}
+                            })
 
-
+                        }
                 }
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-            }
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                }
 
+            }
         }
-    }
 
-}
+    }
