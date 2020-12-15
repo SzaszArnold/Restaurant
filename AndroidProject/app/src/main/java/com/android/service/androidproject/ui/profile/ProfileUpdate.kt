@@ -5,12 +5,14 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +23,7 @@ import com.android.service.androidproject.view.ProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.regex.Pattern
 
 class ProfileUpdate : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
@@ -63,17 +66,7 @@ class ProfileUpdate : Fragment() {
                 .into(profImg)
         })
         btnSave.setOnClickListener { view: View ->
-            profileViewModel.update(
-                Profile(
-                    profName.text.toString(),
-                    profAddress.text.toString(),
-                    profPhone.text.toString(),
-                    profEmail.text.toString(),
-                    "",
-                    imageUri.toString()
-
-                )
-            )
+            updateProfile()
             view.findNavController().navigate(R.id.action_profileUpdate_to_navigation_profile)
         }
         btnPick.setOnClickListener {
@@ -81,14 +74,6 @@ class ProfileUpdate : Fragment() {
         }
         return root
     }
-
-    private fun getList(json: String): List<String> {
-        val gson = Gson()
-        val type = object :
-            TypeToken<List<String>>() {}.type//converting the json to list
-        return gson.fromJson(json, type)//returning the list
-    }
-
     private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
@@ -110,5 +95,46 @@ class ProfileUpdate : Fragment() {
                 .placeholder(R.drawable.ic_home_black_24dp)
                 .into(profImg)
         }
+    }
+    private fun String.isEmailValid(): Boolean {
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
+    }
+
+    private fun String.isValidName(): Boolean {
+        val PASSWORD_PATTERN: Pattern = Pattern.compile("[a-zA-Z0-9$]{4,30}")
+        return !TextUtils.isEmpty(this) && PASSWORD_PATTERN.matcher(this).matches()
+    }
+    private fun String.isValidPhone(): Boolean {
+        val PASSWORD_PATTERN: Pattern = Pattern.compile("[0-9$]{10}")
+        return !TextUtils.isEmpty(this) && PASSWORD_PATTERN.matcher(this).matches()
+    }
+    private fun updateProfile(){
+        if (!profEmail.text.toString().isEmailValid()){
+            Toast.makeText(context, "Invalid e-mail address.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!profName.text.toString().isValidName()){
+            Toast.makeText(context, "Invalid name.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!profAddress.text.toString().isValidName()){
+            Toast.makeText(context, "Invalid name.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!profPhone.text.toString().isValidPhone()){
+            Toast.makeText(context, "Invalid phone number.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        profileViewModel.update(
+            Profile(
+                profName.text.toString(),
+                profAddress.text.toString(),
+                profPhone.text.toString(),
+                profEmail.text.toString(),
+                "",
+                imageUri.toString()
+
+            )
+        )
     }
 }
