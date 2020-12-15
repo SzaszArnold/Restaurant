@@ -34,12 +34,12 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         holder: ViewHolder,
         position: Int
     ) {
-        Log.d("Belepett","1x")
         holder.resName.text = "Name: " + data[position].name
         holder.resAddress.text = "Address: " + data[position].address
         holder.resPrice.text = "Price: " + data[position].price
-        bundle= bundleOf("uid" to data[position].id)
-        Log.d("Belepett","${data[position].id}")
+        bundle= bundleOf("uid" to data[position].id, "name" to data[position].name, "address" to data[position].address,
+        "price" to data[position].price, "phone" to data[position].phone, "city" to data[position].city, "lat" to data[position].lat,
+            "lng" to data[position].lng, "url" to data[position].url)
         Glide.with(holder.itemView)
             .load(data[position].url)
             .centerCrop()
@@ -50,7 +50,6 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
     override fun getItemCount(): Int {
         return data.size
     }
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val resName: TextView
         val resAddress: TextView

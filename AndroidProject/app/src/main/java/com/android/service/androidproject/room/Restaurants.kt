@@ -14,7 +14,8 @@ data class Restaurants(
     @ColumnInfo(name = "phone") val phone: String,
     @ColumnInfo(name = "lat") val lat: String,
     @ColumnInfo(name = "lng") val lng: String,
-    @ColumnInfo(name = "img_url") val img_url: String
+    @ColumnInfo(name = "img_url") val img_url: String,
+    @ColumnInfo(name="favorite") val fav: Boolean
 ) {
     @PrimaryKey(autoGenerate = true)
     var uid = 0

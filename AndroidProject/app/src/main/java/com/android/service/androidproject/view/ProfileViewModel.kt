@@ -1,4 +1,4 @@
-package com.android.service.androidproject.ui.profile
+package com.android.service.androidproject.view
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

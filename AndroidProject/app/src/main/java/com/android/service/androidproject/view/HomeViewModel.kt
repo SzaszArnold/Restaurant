@@ -1,11 +1,9 @@
-package com.android.service.androidproject.ui.home
+package com.android.service.androidproject.view
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.room.AppDatabase
 import com.android.service.androidproject.room.Restaurants
 import com.android.service.androidproject.room.RestaurantsRepository
@@ -23,5 +21,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun insert(restaurants: Restaurants) = viewModelScope.launch {
         repository.insert(restaurants)
     }
-
+    fun delete() = viewModelScope.launch {
+        repository.delete()
+    }
 }

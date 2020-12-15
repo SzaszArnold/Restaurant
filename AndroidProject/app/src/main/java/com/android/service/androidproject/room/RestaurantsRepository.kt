@@ -12,5 +12,9 @@ class RestaurantsRepository(private val restaurantsDAO: RestaurantsDAO) {
     suspend fun insert(restaurants: Restaurants) {
         restaurantsDAO.insert(restaurants)
     }
-
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun delete() {
+        restaurantsDAO.deleteAll()
+    }
 }

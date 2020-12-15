@@ -8,23 +8,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
+import com.android.service.androidproject.view.RestaurantsViewModel
+import com.android.service.androidproject.view.SplashState
 
 class SplashActivity : AppCompatActivity() {
-    private var context = this@SplashActivity
     private var requestCode = 123
+    private lateinit var restaurantsViewModel: RestaurantsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         requestAllPermissions()
-        val splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        splashViewModel.liveData.observe(this, Observer {
-            when (it) {
-                is SplashState.MainActivity -> {
-                    goToMainActivity()
+        restaurantsViewModel = ViewModelProvider(this).get(RestaurantsViewModel::class.java)
+            restaurantsViewModel.liveData.observe(this, Observer {
+                when (it) {
+                    is SplashState.MainActivity -> {
+                        goToMainActivity()
+                    }
                 }
-            }
-        })
+            })
+
+
     }
 
     private fun goToMainActivity() {

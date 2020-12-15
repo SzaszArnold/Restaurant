@@ -1,7 +1,5 @@
 package com.android.service.androidproject.ui.home
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,11 +18,10 @@ import com.android.service.androidproject.API.ResponseDataClass
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.API.herokuAPI
 import com.android.service.androidproject.R
-import com.android.service.androidproject.SplashViewModel
+import com.android.service.androidproject.view.RestaurantsViewModel
 import com.android.service.androidproject.recycle.CustomAdapter
 import com.android.service.androidproject.recycle.PaginationScrollListener
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.android.service.androidproject.view.HomeViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,31 +29,28 @@ import retrofit2.Response
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var splashViewModel: SplashViewModel
+    private lateinit var restaurantsViewModel: RestaurantsViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinnerFilter: Spinner
     private lateinit var spinnerCity: Spinner
     private lateinit var editSearch: EditText
     private lateinit var btnSearch: Button
-    var isLastPage: Boolean = false
-    var isLoading: Boolean = false
-    var page: Int = 2
-    lateinit var sharedPreferences1: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        splashViewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        sharedPreferences1 =
-            requireContext().getSharedPreferences("Restaurants", Context.MODE_PRIVATE)
+        restaurantsViewModel = ViewModelProvider(this).get(RestaurantsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         spinnerFilter = root.findViewById(R.id.spinnerFilter)
         spinnerCity = root.findViewById(R.id.spinnerCity)
         editSearch = root.findViewById(R.id.editSearch)
         btnSearch = root.findViewById(R.id.button)
         recyclerView = root.findViewById(R.id.recycler_view)
+
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -64,35 +58,40 @@ class HomeFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        splashViewModel.apisRestaurants.observe(viewLifecycleOwner, Observer { profile ->
+        restaurantsViewModel.apisRestaurants.observe(viewLifecycleOwner, Observer { profile ->
+            Log.d("testelek", "${profile.size}")
             recyclerView.adapter = CustomAdapter(profile)
         })
 
         recyclerView.addOnScrollListener(object :
             PaginationScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
             override fun isLastPage(): Boolean {
-                return isLastPage
+                return restaurantsViewModel.isLastPage
             }
 
             override fun isLoading(): Boolean {
-                return isLoading
+                return restaurantsViewModel.isLoading
             }
 
             override fun loadMoreItems() {
-                isLoading = true
-                Log.d("Belepett", "ide, page: $page")
-                splashViewModel.loadMore()
-                splashViewModel.page()
-                isLoading = false
-
+                restaurantsViewModel.isLoading=true
+                loadMore()
 
             }
 
         })
 
-
-
         return root
+    }
+
+    private fun loadMore() {
+        Log.d("Belepett", "Most ")
+        restaurantsViewModel.loadMore()
+        restaurantsViewModel.page++
+        restaurantsViewModel.isLoading=false
+
+
+
     }
 
     override fun onResume() {
@@ -129,12 +128,12 @@ class HomeFragment : Fragment() {
                                 restaurantsDataClass.lng = e.lng
                                 restaurantsDataClass.lat = e.lat
                                 restaurantsDataClass.city = e.city
-                                restaurantsDataClass.id=e.id
-                                restaurantsDataClass.phone=e.phone
-                                restaurantsDataClass.price=e.price
+                                restaurantsDataClass.id = e.id
+                                restaurantsDataClass.phone = e.phone
+                                restaurantsDataClass.price = e.price
                                 list.add(restaurantsDataClass)
                             }
-                        Log.d("testpro","$list")
+                            Log.d("testpro", "$list")
 
 
                         })
@@ -167,7 +166,8 @@ class HomeFragment : Fragment() {
                                         response: Response<ResponseDataClass>
                                     ) {
                                         if (response.isSuccessful) {
-                                            recyclerView.layoutManager = LinearLayoutManager(context)
+                                            recyclerView.layoutManager =
+                                                LinearLayoutManager(context)
                                             recyclerView.adapter =
                                                 CustomAdapter(response.body()!!.restaurants)
                                             recyclerView.addItemDecoration(
@@ -202,7 +202,8 @@ class HomeFragment : Fragment() {
                                         response: Response<ResponseDataClass>
                                     ) {
                                         if (response.isSuccessful) {
-                                            recyclerView.layoutManager = LinearLayoutManager(context)
+                                            recyclerView.layoutManager =
+                                                LinearLayoutManager(context)
                                             recyclerView.adapter =
                                                 CustomAdapter(response.body()!!.restaurants)
                                             recyclerView.addItemDecoration(
@@ -263,7 +264,8 @@ class HomeFragment : Fragment() {
                                                         response: Response<ResponseDataClass>
                                                     ) {
                                                         if (response.isSuccessful) {
-                                                            recyclerView.layoutManager = LinearLayoutManager(context)
+                                                            recyclerView.layoutManager =
+                                                                LinearLayoutManager(context)
                                                             recyclerView.adapter =
                                                                 CustomAdapter(response.body()!!.restaurants)
                                                             recyclerView.addItemDecoration(

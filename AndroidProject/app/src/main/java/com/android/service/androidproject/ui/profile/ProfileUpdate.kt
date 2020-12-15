@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.android.service.androidproject.R
 import com.android.service.androidproject.room.Profile
+import com.android.service.androidproject.view.ProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

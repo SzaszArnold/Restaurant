@@ -1,7 +1,6 @@
 package com.android.service.androidproject.ui.profile
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,15 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import com.android.service.androidproject.API.ResponseDataClass
-import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.R
-import com.android.service.androidproject.bitMapToString
 import com.android.service.androidproject.room.Profile
-import com.android.service.androidproject.stringToBitMap
+import com.android.service.androidproject.view.ProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 
 class ProfileFragment : Fragment() {

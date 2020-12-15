@@ -13,19 +13,14 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.android.service.androidproject.API.RestaurantsDataClass
-import com.android.service.androidproject.API.herokuAPI
 import com.android.service.androidproject.R
 import com.android.service.androidproject.room.Restaurants
+import com.android.service.androidproject.view.HomeViewModel
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class DetailFragment : Fragment() {
@@ -39,6 +34,8 @@ class DetailFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var btnChange: Button
     private var imageUri: Uri? = null
+
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,76 +51,45 @@ class DetailFragment : Fragment() {
         resPhone = root.findViewById(R.id.rPhone)
         btnChange = root.findViewById(R.id.changeBtn)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        homeViewModel.allRestaurants.observe(viewLifecycleOwner, Observer { restaurants ->
-            val index = restaurants.lastIndex
-            Log.d("testpro", "${restaurants[index]}, $index")
+        resName.text = "Name: " + requireArguments().getString("name")
+        resAddress.text =
+            "Address: " + requireArguments().getString("city") + ", " + requireArguments().getString(
+                "address"
+            )
+        resPrice.text = "Price: " + requireArguments().getString("price")
+        resPhone.text = "Nr: " + requireArguments().getString("phone")
+        resPhone.hint = requireArguments().getString("phone")
+        resMap.text = "Map"
+        resMap.hint =
+            "geo:${requireArguments().getString("lat")},${requireArguments().getString("lng")}"
+        imageUri = requireArguments().getString("url")!!.toUri()
+        Glide.with(resImg)
+            .load(imageUri)
+            .centerCrop()
+            .override(500, 500)
+            .placeholder(R.drawable.ic_home_black_24dp)
+            .into(resImg)
+        resFavorites.setOnCheckedChangeListener { buttonView, isChecked ->
+            homeViewModel.insert(
+                Restaurants(
+                    requireArguments().getString("uid").toString(),
+                    requireArguments().getString("name").toString(),
+                    requireArguments().getString("address").toString(),
+                    requireArguments().getString("city").toString(),
+                    requireArguments().getString("price").toString(),
+                    requireArguments().getString("phone").toString(),
+                    requireArguments().getString("lat").toString(),
+                    requireArguments().getString("lng").toString(),
+                    imageUri.toString(),
+                    true
+                )
+            )
 
-        })
-        requireArguments().getString("uid")?.let {
-            herokuAPI.endpoints.getRestaurantsByID(it.toInt())
-                .enqueue(object : Callback<RestaurantsDataClass> {
-                    @SuppressLint("SetTextI18n")
-                    override fun onResponse(
-                        call: Call<RestaurantsDataClass>,
-                        response: Response<RestaurantsDataClass>
-                    ) {
-                        if (response.isSuccessful) {
-                            resName.text = "Name: " + response.body()!!.name
-                            resAddress.text =
-                                "Address: " + response.body()!!.city + ", " + response.body()!!.address
-                            resPrice.text = "Price: " + response.body()!!.price
-                            resPhone.text = "Nr: " + response.body()!!.phone
-                            resPhone.hint = response.body()!!.phone
-                            resMap.text = "Map"
-                            resMap.hint = "geo:${response.body()!!.lat},${response.body()!!.lng}"
-                            Glide.with(resImg)
-                                .load(response.body()!!.url)
-                                .centerCrop()
-                                .override(500, 500)
-                                .placeholder(R.drawable.ic_home_black_24dp)
-                                .into(resImg)
-                            //TODO irjam át full bundelre
-                            resFavorites.setOnCheckedChangeListener { buttonView, isChecked ->
-                                if (imageUri != null) {
-                                    val restaurant = Restaurants(
-                                        response.body()!!.id,
-                                        response.body()!!.name,
-                                        response.body()!!.address,
-                                        response.body()!!.city,
-                                        response.body()!!.price,
-                                        response.body()!!.phone,
-                                        response.body()!!.lat,
-                                        response.body()!!.lng,
-                                        imageUri.toString()
-                                    )
-                                    homeViewModel.insert(restaurant)
-                                }
-                                else{
-                                    val restaurant = Restaurants(
-                                        response.body()!!.id,
-                                        response.body()!!.name,
-                                        response.body()!!.address,
-                                        response.body()!!.city,
-                                        response.body()!!.price,
-                                        response.body()!!.phone,
-                                        response.body()!!.lat,
-                                        response.body()!!.lng,
-                                        response.body()!!.url
-                                    )
-                                    homeViewModel.insert(restaurant)
-                                }
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<RestaurantsDataClass>, t: Throwable) {
-                        Log.d("onFailure", "Here DetailFragment")
-                    }
-                })
         }
         btnChange.setOnClickListener {
             pickImageFromGallery()
         }
+
         resPhone.setOnClickListener {
             val intent =
                 Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "${resPhone.hint}"))
