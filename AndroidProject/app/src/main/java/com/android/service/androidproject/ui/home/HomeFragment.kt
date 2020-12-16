@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
     private lateinit var spinnerCity: Spinner
     private lateinit var editSearch: EditText
     private lateinit var btnSearch: Button
-    private var filter=""
+    private var filter = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,14 +37,15 @@ class HomeFragment : Fragment() {
     ): View? {
 
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        restaurantsViewModel = ViewModelProvider(this).get(RestaurantsViewModel::class.java)
+        activity?.let {
+            restaurantsViewModel = ViewModelProvider(it).get(RestaurantsViewModel::class.java)
+        }
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         spinnerFilter = root.findViewById(R.id.spinnerFilter)
         spinnerCity = root.findViewById(R.id.spinnerCity)
         editSearch = root.findViewById(R.id.editSearch)
         btnSearch = root.findViewById(R.id.button)
         recyclerView = root.findViewById(R.id.recycler_view)
-
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -53,7 +54,7 @@ class HomeFragment : Fragment() {
             )
         )
         restaurantsViewModel.apisRestaurants.observe(viewLifecycleOwner, Observer { profile ->
-            Log.d("testelek", "${profile.size}")
+            Log.d("testelek", "${profile}")
             recyclerView.adapter = CustomAdapter(profile)
         })
 
@@ -68,9 +69,10 @@ class HomeFragment : Fragment() {
             }
 
             override fun loadMoreItems() {
-                if(filter=="None"){
-                restaurantsViewModel.isLoading = true
-                loadMore()}
+                if (filter == "None") {
+                    restaurantsViewModel.isLoading = true
+                    loadMore()
+                }
 
             }
 
@@ -102,12 +104,14 @@ class HomeFragment : Fragment() {
                 view: View, position: Int, id: Long
             ) {
                 if (type[position] == "None") {
-                    filter="None"
+                    filter = "None"
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE
+                   //restaurantsViewModel.loadFirst()
                 }
                 if (type[position] == "Fav") {
+                    filter = ""
                     btnSearch.visibility = View.VISIBLE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE
@@ -145,6 +149,7 @@ class HomeFragment : Fragment() {
                     }
                 }
                 if (type[position] == "Name" || type[position] == "Price") {
+                    filter = ""
                     spinnerCity.visibility = View.GONE
                     btnSearch.visibility = View.VISIBLE
                     editSearch.visibility = View.VISIBLE
@@ -162,6 +167,7 @@ class HomeFragment : Fragment() {
                     }
                 }
                 if (type[position] == "City") {
+                    filter = ""
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.VISIBLE
@@ -185,20 +191,21 @@ class HomeFragment : Fragment() {
                                     parent: AdapterView<*>,
                                     view: View, position: Int, id: Long
                                 ) {
-                                    restaurantsViewModel.loadByCity( cType[position])
+                                    restaurantsViewModel.loadByCity(cType[position])
                                 }
 
                                 override fun onNothingSelected(parent: AdapterView<*>) {
-                                }}
-                            })
+                                }
+                            }
+                        })
 
-                        }
                 }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                }
-
             }
-        }
 
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+
+        }
     }
+
+}

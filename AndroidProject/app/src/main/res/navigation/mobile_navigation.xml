@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -37,6 +37,15 @@
         android:id="@+id/detailFragment"
         android:name="com.android.service.androidproject.ui.home.DetailFragment"
         android:label="DetailFragment"
-        tools:layout="@layout/fragment_detail"/>/>
+        tools:layout="@layout/fragment_detail"/>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.android.service.androidproject.ui.splash.SplashFragment"
+        tools:layout="@layout/fragment_splash"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>/>
 
 </navigation>

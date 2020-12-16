@@ -23,14 +23,7 @@ class RestaurantsViewModel : ViewModel() {
     private val mutableLiveData = MutableLiveData<SplashState>()
     val apisRestaurants: MutableLiveData<List<RestaurantsDataClass>> = MutableLiveData()
     val apisCities: MutableLiveData<CityDataClass> = MutableLiveData()
-
-    init {
-
-        loadFirst()
-
-    }
-
-    private fun loadFirst() = viewModelScope.launch {
+    fun loadFirst() {
         herokuAPI.endpoints.getRestaurants("US", 25, 1)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
@@ -38,8 +31,11 @@ class RestaurantsViewModel : ViewModel() {
                     response: Response<ResponseDataClass>
                 ) {
                     if (response.isSuccessful) {
+
                         apisRestaurants.postValue(response.body()!!.restaurants)
                         mutableLiveData.postValue(SplashState.MainActivity())
+                        Log.d("testelek", "${apisRestaurants.value}")
+
                     }
                 }
 
