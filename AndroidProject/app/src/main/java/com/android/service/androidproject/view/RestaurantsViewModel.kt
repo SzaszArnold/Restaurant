@@ -58,6 +58,9 @@ class RestaurantsViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         apisRestaurants.postValue(apisRestaurants.value!!.plus(response.body()!!.restaurants))
+                        if (response.body()!!.restaurants.size != 25) {
+                            isLastPage = true
+                        }
                     }
                 }
 
@@ -108,6 +111,7 @@ class RestaurantsViewModel : ViewModel() {
                 }
             })
     }
+
     fun loadCity() {
         herokuAPI.endpoints.getCities()
             .enqueue(object : Callback<CityDataClass> {
@@ -128,6 +132,7 @@ class RestaurantsViewModel : ViewModel() {
                 }
             })
     }
+
     fun loadByCity(city: String) {
         herokuAPI.endpoints.getRestaurantsByCity(city)
             .enqueue(object : Callback<ResponseDataClass> {

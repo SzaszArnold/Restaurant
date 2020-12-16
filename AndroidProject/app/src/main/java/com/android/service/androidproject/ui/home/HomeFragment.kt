@@ -28,6 +28,7 @@ class HomeFragment : Fragment() {
     private lateinit var spinnerCity: Spinner
     private lateinit var editSearch: EditText
     private lateinit var btnSearch: Button
+    private var filter=""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,8 +68,9 @@ class HomeFragment : Fragment() {
             }
 
             override fun loadMoreItems() {
+                if(filter=="None"){
                 restaurantsViewModel.isLoading = true
-                loadMore()
+                loadMore()}
 
             }
 
@@ -100,6 +102,7 @@ class HomeFragment : Fragment() {
                 view: View, position: Int, id: Long
             ) {
                 if (type[position] == "None") {
+                    filter="None"
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE

@@ -54,7 +54,7 @@ class DetailFragment : Fragment() {
             if (profile.isNotEmpty()) {
                 if (profile[profile.lastIndex].id == requireArguments().getString("uid")) {
                     resFavorites.isChecked = true
-                    resFavorites.isClickable=false
+                    resFavorites.isClickable = false
                 }
             }
         })
@@ -76,21 +76,24 @@ class DetailFragment : Fragment() {
             .override(500, 500)
             .placeholder(R.drawable.ic_home_black_24dp)
             .into(resImg)
-        resFavorites.setOnCheckedChangeListener { buttonView, isChecked ->
-            homeViewModel.insert(
-                Restaurants(
-                    requireArguments().getString("uid").toString(),
-                    requireArguments().getString("name").toString(),
-                    requireArguments().getString("address").toString(),
-                    requireArguments().getString("city").toString(),
-                    requireArguments().getString("price").toString(),
-                    requireArguments().getString("phone").toString(),
-                    requireArguments().getString("lat").toString(),
-                    requireArguments().getString("lng").toString(),
-                    imageUri.toString(),
-                    true
+
+        //TODO fix bug here
+            resFavorites.setOnCheckedChangeListener { buttonView, isChecked ->
+                homeViewModel.insert(
+                    Restaurants(
+                        requireArguments().getString("uid").toString(),
+                        requireArguments().getString("name").toString(),
+                        requireArguments().getString("address").toString(),
+                        requireArguments().getString("city").toString(),
+                        requireArguments().getString("price").toString(),
+                        requireArguments().getString("phone").toString(),
+                        requireArguments().getString("lat").toString(),
+                        requireArguments().getString("lng").toString(),
+                        imageUri.toString(),
+                        true
+                    )
                 )
-            )
+
 
         }
         btnChange.setOnClickListener {
