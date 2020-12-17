@@ -77,22 +77,22 @@ class DetailFragment : Fragment() {
             .placeholder(R.drawable.ic_home_black_24dp)
             .into(resImg)
 
-        //TODO fix bug here
-            resFavorites.setOnCheckedChangeListener { buttonView, isChecked ->
-                homeViewModel.insert(
-                    Restaurants(
-                        requireArguments().getString("uid").toString(),
-                        requireArguments().getString("name").toString(),
-                        requireArguments().getString("address").toString(),
-                        requireArguments().getString("city").toString(),
-                        requireArguments().getString("price").toString(),
-                        requireArguments().getString("phone").toString(),
-                        requireArguments().getString("lat").toString(),
-                        requireArguments().getString("lng").toString(),
-                        imageUri.toString(),
-                        true
-                    )
+        resFavorites.setOnClickListener {
+            resFavorites.isChecked = true
+            homeViewModel.insert(
+                Restaurants(
+                    requireArguments().getString("uid").toString(),
+                    requireArguments().getString("name").toString(),
+                    requireArguments().getString("address").toString(),
+                    requireArguments().getString("city").toString(),
+                    requireArguments().getString("price").toString(),
+                    requireArguments().getString("phone").toString(),
+                    requireArguments().getString("lat").toString(),
+                    requireArguments().getString("lng").toString(),
+                    imageUri.toString(),
+                    true
                 )
+            )
 
 
         }

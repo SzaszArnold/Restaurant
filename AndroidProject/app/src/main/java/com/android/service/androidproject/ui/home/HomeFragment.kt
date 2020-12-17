@@ -96,19 +96,18 @@ class HomeFragment : Fragment() {
         val adapter =
             context?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, type) }
         spinnerFilter.adapter = adapter
-
         spinnerFilter.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View, position: Int, id: Long
+                view: View?, position: Int, id: Long
             ) {
                 if (type[position] == "None") {
                     filter = "None"
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE
-                   //restaurantsViewModel.loadFirst()
+                    restaurantsViewModel.loadFirst()
                 }
                 if (type[position] == "Fav") {
                     filter = ""
@@ -189,7 +188,7 @@ class HomeFragment : Fragment() {
                                 AdapterView.OnItemSelectedListener {
                                 override fun onItemSelected(
                                     parent: AdapterView<*>,
-                                    view: View, position: Int, id: Long
+                                    view: View?, position: Int, id: Long
                                 ) {
                                     restaurantsViewModel.loadByCity(cType[position])
                                 }
