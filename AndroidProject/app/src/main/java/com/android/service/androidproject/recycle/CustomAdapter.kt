@@ -8,16 +8,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.R
+import com.android.service.androidproject.view.HomeViewModel
+import com.android.service.androidproject.view.RestaurantsViewModel
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_view.view.*
 
 
 class CustomAdapter(private val data: List<RestaurantsDataClass>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+    private lateinit var homeViewModel: HomeViewModel
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

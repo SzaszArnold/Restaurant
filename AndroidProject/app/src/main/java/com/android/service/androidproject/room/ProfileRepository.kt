@@ -19,5 +19,9 @@ class ProfileRepository(private val profileDAO: ProfileDAO) {
     suspend fun update(profile: Profile) {
         profileDAO.insert(profile)
     }
-
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun delete() {
+        profileDAO.deleteAll()
+    }
 }

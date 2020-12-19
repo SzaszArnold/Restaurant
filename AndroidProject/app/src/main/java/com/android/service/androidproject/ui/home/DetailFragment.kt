@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ class DetailFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var btnChange: Button
     private var imageUri: Uri? = null
+    private var isFavorite = false
+    private var mapCoordinate=""
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -54,7 +57,7 @@ class DetailFragment : Fragment() {
             if (profile.isNotEmpty()) {
                 if (profile[profile.lastIndex].id == requireArguments().getString("uid")) {
                     resFavorites.isChecked = true
-                    resFavorites.isClickable = false
+                    isFavorite = true
                 }
             }
         })
@@ -66,8 +69,7 @@ class DetailFragment : Fragment() {
         resPrice.text = "Price: " + requireArguments().getString("price")
         resPhone.text = "Nr: " + requireArguments().getString("phone")
         resPhone.hint = requireArguments().getString("phone")
-        resMap.text = "Map"
-        resMap.hint =
+        mapCoordinate =
             "geo:${requireArguments().getString("lat")},${requireArguments().getString("lng")}"
         imageUri = requireArguments().getString("url")!!.toUri()
         Glide.with(resImg)
@@ -78,23 +80,26 @@ class DetailFragment : Fragment() {
             .into(resImg)
 
         resFavorites.setOnClickListener {
-            resFavorites.isChecked = true
-            homeViewModel.insert(
-                Restaurants(
-                    requireArguments().getString("uid").toString(),
-                    requireArguments().getString("name").toString(),
-                    requireArguments().getString("address").toString(),
-                    requireArguments().getString("city").toString(),
-                    requireArguments().getString("price").toString(),
-                    requireArguments().getString("phone").toString(),
-                    requireArguments().getString("lat").toString(),
-                    requireArguments().getString("lng").toString(),
-                    imageUri.toString(),
-                    true
+            if (!isFavorite) {
+                resFavorites.isChecked = true
+                homeViewModel.insert(
+                    Restaurants(
+                        requireArguments().getString("uid").toString(),
+                        requireArguments().getString("name").toString(),
+                        requireArguments().getString("address").toString(),
+                        requireArguments().getString("city").toString(),
+                        requireArguments().getString("price").toString(),
+                        requireArguments().getString("phone").toString(),
+                        requireArguments().getString("lat").toString(),
+                        requireArguments().getString("lng").toString(),
+                        imageUri.toString(),
+                        true
+                    )
                 )
-            )
-
-
+            }
+            if(isFavorite){
+                homeViewModel.deleteById(requireArguments().getString("uid")!!.toInt())
+            }
         }
         btnChange.setOnClickListener {
             pickImageFromGallery()
@@ -106,7 +111,7 @@ class DetailFragment : Fragment() {
             requireContext().startActivity(intent)
         }
         resMap.setOnClickListener {
-            val gmmIntentUri = Uri.parse(resMap.hint.toString())
+            val gmmIntentUri = Uri.parse(mapCoordinate)
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
             mapIntent.setPackage("com.google.android.apps.maps")
             requireContext().startActivity(mapIntent)

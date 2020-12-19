@@ -5,9 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.provider.MediaStore.ACTION_IMAGE_CAPTURE
-import android.provider.MediaStore.META_DATA_STILL_IMAGE_CAMERA_PREWARM_SERVICE
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -111,13 +108,17 @@ class ProfileUpdate : Fragment() {
     }
 
     private fun String.isValidName(): Boolean {
-        val PASSWORD_PATTERN: Pattern = Pattern.compile("[a-zA-Z0-9$]{4,30}")
-        return !TextUtils.isEmpty(this) && PASSWORD_PATTERN.matcher(this).matches()
+        val NAME_PATTERN: Pattern = Pattern.compile("[ .a-zA-Z]+")
+        return !TextUtils.isEmpty(this) && NAME_PATTERN.matcher(this).matches()
     }
 
     private fun String.isValidPhone(): Boolean {
-        val PASSWORD_PATTERN: Pattern = Pattern.compile("[0-9$]{10}")
-        return !TextUtils.isEmpty(this) && PASSWORD_PATTERN.matcher(this).matches()
+        val PHONE_PATTERN: Pattern = Pattern.compile("[0-9$]{10}")
+        return !TextUtils.isEmpty(this) && PHONE_PATTERN.matcher(this).matches()
+    }
+    private fun String.isValidAddress(): Boolean {
+        val ADDRESS_PATTERN: Pattern = Pattern.compile("[ -.,a-zA-Z0-9]+")
+        return !TextUtils.isEmpty(this) && ADDRESS_PATTERN.matcher(this).matches()
     }
 
     private fun updateProfile() {
@@ -129,8 +130,8 @@ class ProfileUpdate : Fragment() {
             Toast.makeText(context, "Invalid name.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (!profAddress.text.toString().isValidName()) {
-            Toast.makeText(context, "Invalid adress.", Toast.LENGTH_SHORT).show()
+        if (!profAddress.text.toString().isValidAddress()) {
+            Toast.makeText(context, "Invalid address.", Toast.LENGTH_SHORT).show()
             return
         }
         if (!profPhone.text.toString().isValidPhone()) {

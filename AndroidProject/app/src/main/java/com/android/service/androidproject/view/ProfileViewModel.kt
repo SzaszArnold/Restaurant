@@ -25,5 +25,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun update(profile: Profile) = viewModelScope.launch {
         repository.update(profile)
     }
+    fun delete() = viewModelScope.launch {
+        repository.delete()
+    }
 }
 

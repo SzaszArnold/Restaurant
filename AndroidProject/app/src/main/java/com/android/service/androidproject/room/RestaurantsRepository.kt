@@ -17,5 +17,10 @@ class RestaurantsRepository(private val restaurantsDAO: RestaurantsDAO) {
     suspend fun delete() {
         restaurantsDAO.deleteAll()
     }
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteById(id: Int) {
+        restaurantsDAO.deleteById(id)
+    }
 
 }

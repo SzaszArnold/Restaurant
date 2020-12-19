@@ -24,5 +24,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun delete() = viewModelScope.launch {
         repository.delete()
     }
-
+    fun deleteById(id: Int)=viewModelScope.launch {
+        repository.deleteById(id)
+    }
 }

@@ -46,16 +46,6 @@ class ProfileFragment : Fragment() {
         val gson = Gson()
         val json = gson.toJson(list)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        /* profileViewModel.insert(
-              Profile(
-                  "Arni",
-                  "Romania",
-                  "0749091739",
-                  "arnoldszasz06@gmail.com",
-                  json,
-                  ""
-              )
-         )*/
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
             if (profile.isEmpty()) {
                 profName.text = "Name: "

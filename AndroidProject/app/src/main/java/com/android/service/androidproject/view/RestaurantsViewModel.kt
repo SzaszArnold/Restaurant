@@ -31,11 +31,9 @@ class RestaurantsViewModel : ViewModel() {
                     response: Response<ResponseDataClass>
                 ) {
                     if (response.isSuccessful) {
-
                         apisRestaurants.postValue(response.body()!!.restaurants)
                         mutableLiveData.postValue(SplashState.MainActivity())
                         Log.d("testelek", "${apisRestaurants.value}")
-
                     }
                 }
 

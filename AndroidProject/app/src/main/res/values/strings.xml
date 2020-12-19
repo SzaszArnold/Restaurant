@@ -12,6 +12,7 @@
     <string name="e_mail">E-mail</string>
     <string name="favorite">Favorite</string>
     <string name="select_filter">Select filter:</string>
+    <string name="map">MAP</string>
     <string-array name="Filter">
         <item>None</item>
         <item>Name</item>
