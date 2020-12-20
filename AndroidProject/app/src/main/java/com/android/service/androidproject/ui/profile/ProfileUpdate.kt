@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,14 +51,13 @@ class ProfileUpdate : Fragment() {
         btnPick = root.findViewById(R.id.btnPick)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
+            //if the list is not empty, putting data to the boxes
             if (profile.isNotEmpty()) {
-                Log.d("Profildata", "$profile")
                 val index = profile.lastIndex
                 profName.setText(profile[index].name)
                 profAddress.setText(profile[index].adr)
                 profEmail.setText(profile[index].email)
                 profPhone.setText(profile[index].phoneNr)
-
                 Glide.with(profImg)
                     .load(profile[index].img.toUri())
                     .centerCrop()
@@ -70,6 +68,7 @@ class ProfileUpdate : Fragment() {
 
         })
         btnSave.setOnClickListener { view: View ->
+            //if the save button is clicked navigate vack to the profile fragment
             updateProfile()
             view.findNavController().navigate(R.id.action_profileUpdate_to_navigation_profile)
         }
@@ -80,19 +79,20 @@ class ProfileUpdate : Fragment() {
     }
 
     private fun pickImageFromGallery() {
+        //image pick intent
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
+
     companion object {
         private val IMAGE_PICK_CODE = 1000
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //image pick result
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             imageUri = data?.data
-            Log.d("Profildata", "$imageUri")
             Glide.with(profImg)
                 .load(imageUri)
                 .centerCrop()
@@ -102,25 +102,31 @@ class ProfileUpdate : Fragment() {
         }
     }
 
+    //e-mail validation
     private fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this)
             .matches()
     }
 
+    //name validation
     private fun String.isValidName(): Boolean {
         val NAME_PATTERN: Pattern = Pattern.compile("[ .a-zA-Z]+")
         return !TextUtils.isEmpty(this) && NAME_PATTERN.matcher(this).matches()
     }
 
+    // phone number validation
     private fun String.isValidPhone(): Boolean {
         val PHONE_PATTERN: Pattern = Pattern.compile("[0-9$]{10}")
         return !TextUtils.isEmpty(this) && PHONE_PATTERN.matcher(this).matches()
     }
+
+    //address validation
     private fun String.isValidAddress(): Boolean {
         val ADDRESS_PATTERN: Pattern = Pattern.compile("[ -.,a-zA-Z0-9]+")
         return !TextUtils.isEmpty(this) && ADDRESS_PATTERN.matcher(this).matches()
     }
 
+    //profile update if the inserted data is valid
     private fun updateProfile() {
         if (!profEmail.text.toString().isEmailValid()) {
             Toast.makeText(context, "Invalid e-mail address.", Toast.LENGTH_SHORT).show()

@@ -2,7 +2,6 @@ package com.android.service.androidproject.ui.profile
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,6 @@ import androidx.navigation.findNavController
 import com.android.service.androidproject.R
 import com.android.service.androidproject.view.ProfileViewModel
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
-
 
 class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
@@ -27,7 +24,6 @@ class ProfileFragment : Fragment() {
     private lateinit var profImg: ImageView
     private lateinit var profEmail: TextView
     private lateinit var btnModify: Button
-
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -42,19 +38,17 @@ class ProfileFragment : Fragment() {
         profPhone = root.findViewById(R.id.profPhone)
         profImg = root.findViewById(R.id.profImg)
         btnModify = root.findViewById(R.id.btnModify)
-        val list = listOf("147604", "149062")
-        val gson = Gson()
-        val json = gson.toJson(list)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         profileViewModel.allProfile.observe(viewLifecycleOwner, Observer { profile ->
+            //if no data, will set default
             if (profile.isEmpty()) {
                 profName.text = "Name: "
                 profAddress.text = "Address: "
                 profEmail.text = "E-mail: "
                 profPhone.text = "Phone: "
             } else {
+                //if the profile is not empty, putting data to the boxes
                 val index = profile.lastIndex
-                Log.d("testpro", "${profile[index]}, $index")
                 profName.text = "Name: " + profile[index].name
                 profAddress.text = "Address: " + profile[index].adr
                 profEmail.text = "E-mail: " + profile[index].email
@@ -66,7 +60,7 @@ class ProfileFragment : Fragment() {
                     .into(profImg)
             }
         })
-
+        //navigate to the profile update fragment
         btnModify.setOnClickListener { view: View ->
             view.findNavController().navigate(R.id.action_navigation_profile_to_profileUpdate)
         }

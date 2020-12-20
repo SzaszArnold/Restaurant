@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +34,7 @@ class DetailFragment : Fragment() {
     private lateinit var btnChange: Button
     private var imageUri: Uri? = null
     private var isFavorite = false
-    private var mapCoordinate=""
+    private var mapCoordinate = ""
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -53,9 +52,10 @@ class DetailFragment : Fragment() {
         resPhone = root.findViewById(R.id.rPhone)
         btnChange = root.findViewById(R.id.changeBtn)
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        homeViewModel.allRestaurants.observe(viewLifecycleOwner, Observer { profile ->
-            if (profile.isNotEmpty()) {
-                if (profile[profile.lastIndex].id == requireArguments().getString("uid")) {
+        //observe if the detailed restaurant is favorized
+        homeViewModel.allRestaurants.observe(viewLifecycleOwner, Observer { restaurant ->
+            if (restaurant.isNotEmpty()) {
+                if (restaurant[restaurant.lastIndex].id == requireArguments().getString("uid")) {
                     resFavorites.isChecked = true
                     isFavorite = true
                 }
@@ -80,6 +80,7 @@ class DetailFragment : Fragment() {
             .into(resImg)
 
         resFavorites.setOnClickListener {
+            //if not set before favorite insert data in the database
             if (!isFavorite) {
                 resFavorites.isChecked = true
                 homeViewModel.insert(
@@ -97,7 +98,8 @@ class DetailFragment : Fragment() {
                     )
                 )
             }
-            if(isFavorite){
+            //if was favorized and clicked again, this will delete the restaurants data from the database
+            if (isFavorite) {
                 homeViewModel.deleteById(requireArguments().getString("uid")!!.toInt())
             }
         }
@@ -106,21 +108,26 @@ class DetailFragment : Fragment() {
         }
 
         resPhone.setOnClickListener {
+            //call intent-> call the restaurant
             val intent =
                 Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "${resPhone.hint}"))
             requireContext().startActivity(intent)
         }
         resMap.setOnClickListener {
+            //map intent-> starting map in a specific coordinate
             val gmmIntentUri = Uri.parse(mapCoordinate)
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
             mapIntent.setPackage("com.google.android.apps.maps")
             requireContext().startActivity(mapIntent)
         }
 
+
         return root
     }
 
+
     private fun pickImageFromGallery() {
+        //intent launching gallery for choosing picture
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
@@ -132,6 +139,7 @@ class DetailFragment : Fragment() {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //the result after the picture picking
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             imageUri = data?.data
             Glide.with(resImg)

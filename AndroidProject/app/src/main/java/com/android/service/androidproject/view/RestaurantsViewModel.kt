@@ -4,12 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.android.service.androidproject.API.CityDataClass
 import com.android.service.androidproject.API.ResponseDataClass
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.API.herokuAPI
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +22,7 @@ class RestaurantsViewModel : ViewModel() {
     val apisRestaurants: MutableLiveData<List<RestaurantsDataClass>> = MutableLiveData()
     val apisCities: MutableLiveData<CityDataClass> = MutableLiveData()
     fun loadFirst() {
+        //api call for the first data load
         herokuAPI.endpoints.getRestaurants("US", 25, 1)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
@@ -31,19 +30,21 @@ class RestaurantsViewModel : ViewModel() {
                     response: Response<ResponseDataClass>
                 ) {
                     if (response.isSuccessful) {
+                        //post value if is data
                         apisRestaurants.postValue(response.body()!!.restaurants)
+                        //post value if the data is loaded
                         mutableLiveData.postValue(SplashState.MainActivity())
-                        Log.d("testelek", "${apisRestaurants.value}")
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
-
+                    Log.d("onFailure", "Here RestaurantViewModel")
                 }
             })
     }
 
     fun loadMore() {
+        //api call for more data load
         herokuAPI.endpoints.getRestaurants("US", 25, page)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
@@ -59,12 +60,13 @@ class RestaurantsViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
-
+                    Log.d("onFailure", "Here RestaurantViewModel")
                 }
             })
     }
 
     fun loadPrice(price: Int) {
+        //api call for the price filter
         herokuAPI.endpoints.getRestaurantsByPrice("US", 25, price)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
@@ -80,12 +82,13 @@ class RestaurantsViewModel : ViewModel() {
                     call: Call<ResponseDataClass>,
                     t: Throwable
                 ) {
-                    Log.d("onFailure", "Here DetailFragment")
+                    Log.d("onFailure", "Here RestaurantViewModel")
                 }
             })
     }
 
     fun loadName(name: String) {
+        //api call for the name filter
         herokuAPI.endpoints.getRestaurantsByName(name)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
@@ -101,12 +104,13 @@ class RestaurantsViewModel : ViewModel() {
                     call: Call<ResponseDataClass>,
                     t: Throwable
                 ) {
-                    Log.d("onFailure", "Here DetailFragment")
+                    Log.d("onFailure", "Here RestaurantViewModel")
                 }
             })
     }
 
     fun loadCity() {
+        //api call for the cities name
         herokuAPI.endpoints.getCities()
             .enqueue(object : Callback<CityDataClass> {
                 override fun onResponse(
@@ -122,12 +126,13 @@ class RestaurantsViewModel : ViewModel() {
                     call: Call<CityDataClass>,
                     t: Throwable
                 ) {
-                    Log.d("onFailure", "Here DetailFragment")
+                    Log.d("onFailure", "Here RestaurantViewModel")
                 }
             })
     }
 
     fun loadByCity(city: String) {
+        ////api call for the city filter
         herokuAPI.endpoints.getRestaurantsByCity(city)
             .enqueue(object : Callback<ResponseDataClass> {
                 override fun onResponse(
@@ -143,7 +148,7 @@ class RestaurantsViewModel : ViewModel() {
                     call: Call<ResponseDataClass>,
                     t: Throwable
                 ) {
-                    Log.d("onFailure", "Here DetailFragment")
+                    Log.d("onFailure", "Here RestaurantViewModel")
                 }
             })
     }

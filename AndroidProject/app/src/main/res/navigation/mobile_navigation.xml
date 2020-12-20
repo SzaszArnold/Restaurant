@@ -28,7 +28,7 @@
         android:id="@+id/profileUpdate"
         android:name="com.android.service.androidproject.ui.profile.ProfileUpdate"
         android:label="ProfileUpdate"
-        tools:layout="@layout/fragment_profile_update" >>
+        tools:layout="@layout/fragment_profile_update" >
         <action
             android:id="@+id/action_profileUpdate_to_navigation_profile"
             app:destination="@id/navigation_profile" />
@@ -36,13 +36,13 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.android.service.androidproject.ui.home.DetailFragment"
-        android:label="DetailFragment"
-        tools:layout="@layout/fragment_detail"/>
+        android:label="@string/Detail"
+        tools:layout="@layout/fragment_detail" />
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.android.service.androidproject.ui.splash.SplashFragment"
-        tools:layout="@layout/fragment_splash"
-        android:label="SplashFragment" >
+        android:label="@string/Splash"
+        tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_navigation_home"
             app:destination="@id/navigation_home" />

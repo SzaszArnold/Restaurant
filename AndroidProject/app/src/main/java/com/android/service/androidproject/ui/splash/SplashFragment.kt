@@ -24,6 +24,7 @@ class SplashFragment : Fragment() {
         }
         restaurantsViewModel.loadFirst()
         restaurantsViewModel.apisRestaurants.observe(viewLifecycleOwner, Observer { res ->
+            //navigate to the home fragment if the data is loaded
             if (res.isNotEmpty()) {
                 view?.findNavController()?.navigate(R.id.action_splashFragment_to_navigation_home)
             }

@@ -1,7 +1,6 @@
 package com.android.service.androidproject.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,11 +52,11 @@ class HomeFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
+        //observe the restaurants data in the view model, and adding to the recycleView
         restaurantsViewModel.apisRestaurants.observe(viewLifecycleOwner, Observer { profile ->
-            Log.d("testelek", "${profile}")
             recyclerView.adapter = CustomAdapter(profile)
         })
-
+        //Pagination
         recyclerView.addOnScrollListener(object :
             PaginationScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
             override fun isLastPage(): Boolean {
@@ -73,21 +72,17 @@ class HomeFragment : Fragment() {
                     restaurantsViewModel.isLoading = true
                     loadMore()
                 }
-
             }
-
         })
 
         return root
     }
 
+    //loading more data to the recycleView
     private fun loadMore() {
-        Log.d("Belepett", "Most ")
         restaurantsViewModel.loadMore()
         restaurantsViewModel.page++
         restaurantsViewModel.isLoading = false
-
-
     }
 
     override fun onResume() {
@@ -103,6 +98,7 @@ class HomeFragment : Fragment() {
                 view: View?, position: Int, id: Long
             ) {
                 if (type[position] == "None") {
+                    //set filter elements
                     filter = "None"
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
@@ -110,11 +106,13 @@ class HomeFragment : Fragment() {
                     restaurantsViewModel.loadFirst()
                 }
                 if (type[position] == "Fav") {
+                    //set filter elements
                     filter = ""
                     btnSearch.visibility = View.VISIBLE
                     editSearch.visibility = View.GONE
                     spinnerCity.visibility = View.GONE
                     val list = arrayListOf<RestaurantsDataClass>()
+                    //adding favorized data from the Room Database to the recycleView
                     homeViewModel.allRestaurants.observe(
                         viewLifecycleOwner,
                         Observer { restaurants ->
@@ -131,12 +129,8 @@ class HomeFragment : Fragment() {
                                 restaurantsDataClass.price = e.price
                                 list.add(restaurantsDataClass)
                             }
-                            Log.d("testpro", "$list")
-
-
                         })
                     btnSearch.setOnClickListener {
-
                         recyclerView.layoutManager = LinearLayoutManager(context)
                         recyclerView.adapter = CustomAdapter(list)
                         recyclerView.addItemDecoration(
@@ -148,6 +142,7 @@ class HomeFragment : Fragment() {
                     }
                 }
                 if (type[position] == "Name" || type[position] == "Price") {
+                    //set filter elements
                     filter = ""
                     spinnerCity.visibility = View.GONE
                     btnSearch.visibility = View.VISIBLE
@@ -162,10 +157,10 @@ class HomeFragment : Fragment() {
                         btnSearch.setOnClickListener {
                             restaurantsViewModel.loadName(editSearch.text.toString())
                         }
-
                     }
                 }
                 if (type[position] == "City") {
+                    //set filter elements
                     filter = ""
                     btnSearch.visibility = View.GONE
                     editSearch.visibility = View.GONE
@@ -197,13 +192,11 @@ class HomeFragment : Fragment() {
                                 }
                             }
                         })
-
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
-
         }
     }
 

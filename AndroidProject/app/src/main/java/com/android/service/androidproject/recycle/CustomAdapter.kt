@@ -1,27 +1,22 @@
 package com.android.service.androidproject.recycle
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.android.service.androidproject.API.RestaurantsDataClass
 import com.android.service.androidproject.R
-import com.android.service.androidproject.view.HomeViewModel
-import com.android.service.androidproject.view.RestaurantsViewModel
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_view.view.*
 
 
 class CustomAdapter(private val data: List<RestaurantsDataClass>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-    private lateinit var homeViewModel: HomeViewModel
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -36,11 +31,10 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         holder: ViewHolder,
         position: Int
     ) {
+        //putting data for the specific boxes
         holder.resName.text = "Name: " + data[position].name
         holder.resAddress.text = "Address: " + data[position].city + ", " + data[position].address
         holder.resPrice.text = "Price: " + data[position].price
-
-
         Glide.with(holder.itemView)
             .load(data[position].url)
             .centerCrop()
@@ -61,6 +55,7 @@ class CustomAdapter(private val data: List<RestaurantsDataClass>) :
         val resImg: ImageView
         var restaurants: List<RestaurantsDataClass>
         override fun onClick(view: View) {
+            //sending restaurant data to the detail fragment
             var bundle = bundleOf()
             for (e in restaurants) {
                 if ("Name: " + e.name == view.rName.text.toString()) {
