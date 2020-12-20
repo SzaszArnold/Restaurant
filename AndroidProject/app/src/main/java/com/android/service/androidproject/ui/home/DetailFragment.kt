@@ -8,10 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,6 +17,7 @@ import com.android.service.androidproject.R
 import com.android.service.androidproject.room.Restaurants
 import com.android.service.androidproject.view.HomeViewModel
 import com.bumptech.glide.Glide
+import java.lang.Exception
 
 
 class DetailFragment : Fragment() {
@@ -109,9 +107,14 @@ class DetailFragment : Fragment() {
 
         resPhone.setOnClickListener {
             //call intent-> call the restaurant
-            val intent =
-                Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "${resPhone.hint}"))
-            requireContext().startActivity(intent)
+            try {
+                val intent =
+                    Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "${resPhone.hint}"))
+                requireContext().startActivity(intent)
+            }
+            catch (e: Exception){
+                Toast.makeText(context, "Permission is not granted.", Toast.LENGTH_SHORT).show()
+            }
         }
         resMap.setOnClickListener {
             //map intent-> starting map in a specific coordinate
